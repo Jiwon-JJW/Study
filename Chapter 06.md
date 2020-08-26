@@ -1032,8 +1032,9 @@ public final clss String implements java.io.Serializable, Comparable {
 ## 20. 메서드 간의 호출과 참조
 
 * 같은 클래스에 속한 멤버들 간에는 별도의 인스턴스를 생성하지 않고, 서로 참조 혹은 호출이 가능.
-  * **단, 클래스 멤버가 인스턴스 멤버를 참조 또는 호출 할 때엔 인스턴스 생성이 필요.**
-
+  
+* **단, 클래스 멤버가 인스턴스 멤버를 참조 또는 호출 할 때엔 인스턴스 생성이 필요.**
+  
 * 예제1 : 같은 클래스 내의 인스턴스 메서드와 static메서드 간의 호출
 
   ```java
@@ -1277,7 +1278,7 @@ class MyMath3 {
 
 ---
 
-### 기본생성자 (default constructor)
+### 1) 기본생성자 (default constructor)
 
 * 모든 클래스에는 반드시 하나 이상의 생성자가 정의 되어있어야 한다.
 
@@ -1339,7 +1340,7 @@ class MyMath3 {
 
 ---
 
-###  매개변수가 있는 생성자
+###  2) 매개변수가 있는 생성자
 
 * 생성자도 매개변수를 선언하여 호출 시 값을 넘겨받아, 인스턴스의 초기화 작업에 사용할 수 있다.
 
@@ -1386,3 +1387,247 @@ class MyMath3 {
   > c1의 color=white, gearType=auto, door=4
   >
   > c2의 color=white, gearType=auto, door=4
+
+
+
+---
+
+### 3) 생성자에서 다른 생성자 호출하기 - this()
+
+* 같은 클래스의 멤버들 간에 서로 호출할 수 있는 것 처럼, 생성자 간에도 호출이 가능 하지만, 두 조건을 만족시켜야 함.
+
+  > * 생성자의 이름으로 클래스 이름 대신 this를 사용한다.
+  >
+  > * 한 생성자에서 다른 생성자를 호출할 때는 반드시 첫 줄에서만 호출이 가능하다.
+  >
+  >   > 생성자를 작성할 때 조건을 만족시키지 못한 식:
+  >   >
+  >   > ```java
+  >   > Car(String color) {
+  >   >   door = 5;							 // 첫 번째 줄
+  >   >   Car(color, "auto", 4); // 에러1. 생성자의 두 번째 줄에서 다른 생성자 호출
+  >   > }												 // 에러2. this(color, "auto", 4);로 해야함.
+  >   > ```
+  >   >
+  >   > * 생성자 내에서 초기화 작업 도중에 다른 생성자를 호출하게 되면, 호출 된 다른 생성자 내에서도 초기화가 될 것 이므로 
+  >   >   다른 생성자를 호출 하기 이전의 초기화 작업이 무의미해질 수 있기 때문에 **다른 생성자를 호출 할 때는 첫 줄에서만 호출이 가능하다.**
+
+* 예제:
+
+  ```java
+  class Car2 {
+  	String color;		 //색상
+  	String gearType; //변속기 종류 - auto(자동), manual(수동)
+  	int door;				 //문의 개수
+  	
+  	Car2() {
+  		this("white", "auto", 4); //Car2(String color,String gearType, int door)를 호출
+  	}
+  	
+  	Car2(String color) {
+  		this(color, "auto", 4);   //Car2(String color,String gearType, int door)를 호출
+  	}
+  	
+  	Car2(String color, String gearType, int door) {
+  		this.color = color;
+  		this.gearType = gearType;
+  		this.door = door;
+  	}
+  }
+  public class Ex6_13 {
+  	public static void main(String[] args) {
+  		Car2 c1= new Car2();	// 이와 같이 인스턴스를 생성 한 경우, "white", "auto", 4로 초기화 되도록 세팅 되어있음.
+  		Car2 c2= new Car2("blue");
+  		
+  		System.out.println("c1의 color=" + c1.color + ", gearType="+ c1.gearType + ", door="+c1.door);
+  		System.out.println("c2의 color=" + c2.color + ", gearType="+ c2.gearType + ", door="+c2.door);
+  	}
+  }
+  ```
+
+  > 위 식의 값:
+  >
+  > c1의 color=white, gearType=auto, door=4
+  >
+  > c2의 color=blue, gearType=auto, door=4
+
+  * 같은 클래스 내의 생성자들은 일반적으로 서로 관계가 깊은 경우가 많기 때문에, 서로 호출하도록 하여 유기적으로 연결해준다면 더 좋은 코드를 얻을 수 있다.
+    수정이 필요한 경우, 적은 코드만 변경하면 되므로 유지보수가 쉬움.
+
+
+
+### 4) 객체 자신을 가리키는 참조변수 - this
+
+* **this** :  인스턴스 자신을 가리키는 **참조변수**. 인스턴스의 주소가 저장되어 있다.
+  		  모든 인스턴스메서드에 지역변수로 숨겨진 채로 존재한다. (인스턴스 멤버만 사용할 수 있음.)
+* **this(), this(매개변수)**: **생성자**. 같은 클래스의 다른 생성자를 호출할 때 사용한다.
+
+
+
+## 23. 변수의 초기화
+
+#### 변수의 초기화란?
+
+* 변수를 선언하고 처음으로 값을 저장하는 것.
+
+* 멤버변수(클래스 변수와 인스턴스 변수)와 배열의 초기화는 선택이지만, 지역변수의 초기화는 필수이다.
+
+  ```java
+  class initTest {
+    int x;		 // 인스턴스 변수
+    int y = x; // 인스턴스 변수(자동으로 초기화 됨.)
+    
+    void method1() { // 자동적으로 초기화 되지 않음.
+      int i;		 // 지역변수
+      int j = i; // 에러. 지역변수를 초기화하지 않고 사용
+    }
+  }
+  ```
+
+* 각 타입의 기본 값:
+
+  | 자료형           | 기본값        |
+  | ---------------- | ------------- |
+  | boolean          | false         |
+  | char             | '\u0000'      |
+  | byte, short, int | 0             |
+  | long             | 0L            |
+  | float            | 0.0f          |
+  | double           | 0.0d 또는 0.0 |
+  | 참조형           | null          |
+
+
+
+## 24. 멤버변수의 초기화
+
+* 지역변수와 달리, 멤버변수는 **각 타입의 기본값으로 자동 초기화** 된다.
+
+* 멤버변수의 초기화에 대해서는 아래의 두가지만 기억하면 된다.
+
+  > 1. 클래스 변수(cv) 초기화 ➡️ 인스턴스 변수(iv) 초기화
+  > 2. 자동 초기화 ➡️ 명시적 초기화(간단) ➡️ 초기화 블럭, 생성자(복잡)
+
+
+
+#### 명시적 초기화(explicit initialization)
+
+* 변수를 선언과 동시에 초기화 하는 것.
+
+* 가장 기본적이면서도 간단한 초기화 방법이므로, 가장 우선적으로 고려 되어야 함.
+
+  ```java
+  class Car {
+    int door = 4;						 // 기본형(primitive type) 변수의 초기화
+    Engine e = new Engine(); // 참조형(reference type) 변수의 초기화
+    
+    // ...
+  }
+  ```
+
+* 보다 복잡한 초기화 작업이 필요할땐 '초기화 블럭' 또는 '생성자' 사용이 필요.
+
+
+
+#### 초기화 블럭(initialization block)
+
+* 복잡한 초기화 작업이 필요 할 때 사용하는 초기화 블럭. 두 가지 종류가 있다.
+
+  > * **클래스 초기화 블럭**   : 클래스 변수의 복잡한 초기화에 사용.
+  >   사용시, 클래스 내에 블럭{}을 만들고 그 안에 코드를 작성 하는데, **블럭 앞에 static을 붙임.**
+  > * **인스턴스 초기화 블럭**: 인스턴스 변수의 복잡한 초기화에 사용.
+  >   사용 시, 클래스 내에 블럭{}을 만들고 그 안에 코드 작성.
+
+  
+
+  
+
+---
+
+* 예제 1:
+
+  ```java
+  class Ex6_14 {
+  	static {
+  		System.out.println("static { }"); // 클래스 초기화 블럭
+  	}
+  	
+  	{ System.out.println("{ }"); } // 인스턴스 초기화 블럭 
+  	
+  	public Ex6_14() {
+  		System.out.println("생성자");
+  	}
+  	
+  	public static void main(String[] args) {
+  		System.out.println("Ex6_14 bt = new Ex6_14(); ");
+  		Ex6_14 bt= new Ex6_14();
+  		
+  		System.out.println("Ex6_14 bt2 = new Ex6_14(); ");
+  		Ex6_14 bt2= new Ex6_14();
+  	}
+  }
+  ```
+
+  > 위 식의 결과:
+  >
+  > static { }
+  >
+  > Ex6_14 bt = new Ex6_14(); 
+  >
+  > { }
+  >
+  > 생성자
+  >
+  > Ex6_14 bt2 = new Ex6_14(); 
+  >
+  > { }
+  >
+  > 생성자
+
+  * 클래스 초기화 블럭은 처음 메모리에 로딩될 때 한번만 수행.
+    인스턴스 초기화 블럭은 인스턴스가 생성될 때 마다 수행.
+
+
+
+* 예제2: 명시적 초기화를 통해 배열 arr을 생성하고, 클래스 초기화 블럭을 이용해 배열의 각 요소들을
+  random()을 사용해 임의의 값으로 채우도록 했다.
+
+```java
+class Ex6_15 {
+	static int[] arr = new int[10];
+	
+	static {
+		for(int i=0;i<arr.length;i++) {
+			// 1과 10사이의 임의의 값을 배열 arr에 저장한다.
+			arr[i] = (int)(Math.random()*10) +1;
+		}
+	}
+	
+	public static void main(String[] args) {
+		for(int i=0; i<arr.length;i++)
+			System.out.println("arr["+i+"] :"+arr[i]);
+	}
+}
+```
+
+> 위 식의 결과:
+>
+> arr[0] :10
+>
+> arr[1] :4
+>
+> arr[2] :2
+>
+> arr[3] :6
+>
+> arr[4] :7
+>
+> arr[5] :10
+>
+> arr[6] :5
+>
+> arr[7] :9
+>
+> arr[8] :3
+>
+> arr[9] :5
+
