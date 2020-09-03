@@ -1,4 +1,4 @@
-# CHAPTER 05.
+# CHAPTER 05
 
 ## 01. 배열이란?
 
