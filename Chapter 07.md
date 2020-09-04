@@ -236,21 +236,22 @@
   2. **접근 제어자는 조상 클래스의 메서드보다 좁은 범위로 변경할 수 없다.**
      만일 조상 클래스에 정의된 메서드의 접근 제어자가 protected라면, 이를 오버라이딩 하는 자손 클래스의 메서드는 접근 제어자가 protected나 public이어야 한다.
      보통 같은 범위의 접근제어자 사용.
-     public > protected > (default) > private 순.
-
-  3. **조상 클래스의 메서드보다 많은 수의 예외를 선언할 수 없다.**
-
-     * 오버라이딩의 바른 예시:
-
+     
+> public > protected > (default) > private 순. 
+     
+3. **조상 클래스의 메서드보다 많은 수의 예외를 선언할 수 없다.**
+  
+   * 오버라이딩의 바른 예시:
+  
        ```java
-       class parent {
-         void parentMethod() throws IOException, SQLException {
+       class parent { // 조상메서드
+         void parentMethod() throws IOException, SQLException { // 예외가 2개
            ...
          }
        }
        
-       class Child extends Parent {
-         void parentMethod() throws IOException {
+       class Child extends Parent { // 자손 메서드
+         void parentMethod() throws IOException { // 예외가 1개
            ...
          }
          ...
@@ -752,4 +753,6 @@ class CaptionTv extends Tv {
   * 이 경우, 실제 인스턴스가 CaprionTv타입 일지라도, 참조변수 t로는 CaprionTv인스턴스의 **모든 멤버를 사용할 수 없다.**
   * Tv타입의 참조변수로는 CaprionTv인스턴스 중, Tv클래스의 멤버들(상속받은 멤버 포함)만 사용 가능.
   * **둘 다 같은 타입의 인스턴스지만 참조변수의 타입에 따라 사용할 수 있는 멤버의 개수가 달라짐.**
+
+
 
