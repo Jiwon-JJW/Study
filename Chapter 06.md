@@ -214,7 +214,7 @@
      ![객체 생성 예제](https://user-images.githubusercontent.com/69128652/90951119-ab636f00-e492-11ea-92ea-6d5e156e1aa1.png)
 
   2. t1.channel =7;
-     ![객체 예제 2](![스크린샷 2020-08-22 오후 4 17 11](https://user-images.githubusercontent.com/69128652/90951151-0dbc6f80-e493-11ea-8d1c-94dece1c62b9.png)
+     ![객체 예제 2](![스크린샷 2020-08-22 오후 4 17 11](https://user-images.githubusercontent.com/69128652/90951151-0dbc6f80-e493-11ea-8d1c-94dece1c62b9.png)F
 
 * 예제:
 
