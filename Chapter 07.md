@@ -1740,7 +1740,7 @@ class Outer {
   
   public class Ex7_15 {
   	public static void main(String[] args) {
-  		//인스턴스클래스의 인스턴스를 생성하려면 
+  		// 인스턴스클래스의 인스턴스를 생성하려면 
   		// 외부 클래스의 인스턴스를 먼저 생성해야한다.
   		Outer2 oc = new Outer2();
   		Outer2.InstancInner ii = oc.new InstanceInner();

@@ -248,7 +248,7 @@ public class Exercise6_18 {
 }
 ```
 
-* (1) 잘 모르겠습니다..
+* (1) 수식 사용 방법을 잘 모르겠습니다..
 
   ```java
   	boolean isNumber() { 
@@ -294,5 +294,534 @@ public class Exercise6_20 {
   	
   ```
 
-  잘 모르겠습니다..
+  잘 모르겠습니다.. 6-18 응용 같은 느낌인데..
+
+
+
+
+
+## Chapter 07. 객체지향 프로그래밍 2
+
+
+
+**[7-1] 섯다카드 20장을 포함하는 섯다카드 한 벌(SutdaDeck클래스)을 정의 한 것이다. 섯다카드 20장을 담는 SutdaCard배열을 초기화 하시오. 단, 섯다카드는 1부터 10까지의 숫자가 적힌 카드가 한 쌍씩 있고, 숫자가 1,3,8인 경우에는 둘 중의 한 장은 광(Kwang)이어야 한다. 즉, SutdaCard의 인스턴스 변수 isKwang의 값이 true이어야 한다.**
+
+```java
+class SutdaDeck {
+	final int CARD_NUM = 20;
+	SutdaCard[] cards = new SutdaCard[CARD_NUM];
+	
+	SutdaDeck() {
+		/* 
+		 		(1) 배열 sutdaCard를 적절히 초기화 하시오.
+		*/
+	}
+}
+
+class SutdaCard {
+	int num;
+	boolean isKwang;
+	
+	SutdaCard() {
+		this(1,true);
+	}
+	
+	SutdaCard(int num, boolean isKwang) {
+		this.num=num;
+		this.isKwang=isKwang;
+	}
+	
+	public String toString() {
+		return num+(isKwang ? "K" : "");
+	}
+}
+
+public class Exercise7_1 {
+	public static void main(String[] args) {
+		SutdaDeck deck = new SutdaDeck();
+		
+		for (int i = 0; i<deck.cards.length; i++)
+			System.out.print(deck.cards[i]+",");
+	}
+}
+
+[결과]
+1K,2,3K,4,5,6,7,8K,9,10,1,2,3,4,5,6,7,8,9,10,
+```
+
+(1)  
+
+* 순서대로 입력하는 걸 사용 해봄... (결과 null..)
+
+```java
+	SutdaDeck() {
+		int num = 0;
+		int[] cards = new int [CARD_NUM];
+		
+		for(int i =0;i<2;i++) {
+			for(int j=1; j<=10;j++) {
+				cards[i] = j;
+				num++;
+			}
+		}
+	}
+}
+```
+
+* 1,3,8은 광이어야 해서 쓴 것인데.. 이후 출력을 어떻게 해야하는걸까요..
+
+  ```java
+  		int[] cards = new int [CARD_NUM];
+  		for(int i =0;i<cards.length;i++) {
+  			if (i == 1 || i ==3 || i ==8) {
+  				
+  ```
+
+
+
+
+
+**[7-2] 문제7-1의 SutdaDeck클래스에 다음에 정의된 새로운 메서드를 추가하고 테스트 하시오.**
+
+>  ([주의] Math.random()를 사용하는 경우 실행결과와 다를 수 있음.)
+
+> 1. 메서드명 : shuffle
+>
+>    기능 : 배열 cards에 담긴 카드의 위치를 뒤섞는다. (Math.random() 사용)
+>
+>    반환타입 : 없음
+>
+>    매개변수 : 없음
+>    
+>2. 메서드명 : pick
+> 
+>   기능 : 배열 cards에서 지정된 위치의 SutdaCard를 반환한다.
+> 
+>   반환타입 : SutdaCard
+> 
+>   매개변수 : int index - 위치
+> 
+>   
+> 
+>3. 메서드명 : pick 
+> 
+>   기능 : 배열 cards에서 임의의 위치의 SutdaCard를 반환한다. (Math.random() 사용)
+> 
+>   반환타입 : SutdaCard
+> 
+>   매개변수 : 없음  
+
+```java
+class SutdaDeck {
+	final int CARD_NUM = 20;
+	SutdaCard[] cards = new SutdaCard[CARD_NUM];
+
+	SutdaDeck() { 
+		/* 
+		 문제 7-1의 답이므로 내용생략  
+		*/
+	} 
+
+	/* 
+	 (1) 위에 정의된 세 개의 메서드를 작성하시오. 
+	*/
+
+} // SutdaDeck
+
+
+class SutdaCard {
+	int num;
+	boolean isKwang;
+
+	SutdaCard() {
+		this(1, true);
+	}
+
+	SutdaCard(int num, boolean isKwang) {
+		this.num = num;
+		this.isKwang = isKwang;
+	}
+
+	public String toString() {
+		return num + (isKwang ? "K" : "");
+
+	}
+
+}
+
+class Exercise7_2 {
+
+	public static void main(String args[]) {
+		SutdaDeck deck = new SutdaDeck();
+
+		System.out.println(deck.pick(0));
+		System.out.println(deck.pick());
+		deck.shuffle();
+
+		for (int i = 0; i < deck.cards.length; i++)
+			System.out.print(deck.cards[i] + ",");
+
+		System.out.println();
+		System.out.println(deck.pick(0));
+
+	}
+
+}
+
+[결과]
+7
+2,10,1K,7,3,10,5,7,8,5,1,2,9,6,9,4,8K,4,3K
+  2
+```
+
+* (1) 지정된 위치의 값을 반환하는 방법에 대한 수식을 잘 모르겠습니다.. 
+
+  ```java
+  	void shuffle() {
+  	    for (int i = 0; i < cards.length; i++) {
+  	        int j = (int) (Math.random() % cards.length);
+  	        SutdaCard tmp = 0;
+  	        
+  	        tmp = cards[i];
+  	        cards[i]=cards[j];
+  	        cards[j]=tmp;
+          
+    SutdaCard pick(int index) {???}
+  	void pick() {???}
+  ```
+
+
+
+**[7-3] 다음의 코드는 컴파일하면 에러가 발생한다. 그 이유를 설명하고 에러를 수정하기 위해서는 코드를 어떻게 바꾸어야 하는가?**
+
+```java
+class Product{
+	int price;
+	int bonusPoint;
+	
+	Product(int price) {
+		this.price = price;
+		bonusPoint=(int)(price/10.0);
+	}
+}
+
+class Tv extends Product{
+	Tv() {}
+	
+	public String toString() {
+		return "Tv";
+	}
+}
+public class Exercise7_3 {
+	public static void main(String[] args) {
+		Tv t =new Tv();
+	}
+}
+```
+
+* 에러가 발생하는 이유는, 생성자 Product가 정의 되지 않았기 때문에.
+  해결하는 방법은, Product클래스에 Product(){}를 지정해 줘야한다.
+
+
+
+**[7-4] MyTv클래스의 멤버변수 isPowerOn, channel, volume을 클래스 외부에서 접근할 수 없도록 제어자를 붙이고 대신 이 멤버변수들의 값을 어디서나 읽고 변경할 수 있도록 getter와 setter에서 메서드를 추가하시오.**
+
+```java
+class MyTv {
+
+	boolean isPowerOn;
+	int channel;
+	int volume;
+
+	final int MAX_VOLUME = 100;
+	final int MIN_VOLUME = 0;
+	final int MAX_CHANNEL = 100;
+	final int MIN_CHANNEL = 1; 
+
+        /* (1) 알맞은 코드를 넣어 완성하시오. */
+}
+
+public class Exercise7_4 {
+
+	public static void main(String args[]) {
+		MyTv2 t = new MyTv2();
+		t.setChannel(10);
+    
+		System.out.println("CH:" + t.getChannel());
+		t.setVolume(20);
+
+		System.out.println("VOL:" + t.getVolume());
+	}
+}
+```
+
+* (1)
+
+  ```java
+  	public void setChannel(int channel) {
+  		this.channel=channel;
+  		if (channel >MIN_CHANNEL || MAX_CHANNEL > channel)
+  			return;
+  	}
+  	
+  	public int getChannel() {
+  		return channel;
+  }
+  
+  	public void setVolume(int volume) {
+  		this.volume=volume;
+  		if (volume >MIN_VOLUME || MAX_VOLUME > volume)
+  			return;
+  	}
+  	
+  	public int getVolume() {
+  		return volume;	}
+  	
+  	public void turnOnOff() {
+  		this.isPowerOn =!isPowerOn;
+  		}
+  ```
+
+
+
+**[7-5] 문제7-4에서 작성한 MyTv2클래스에 이전 채널(previous channel)로 이동하는 기능의 메서드를 추가해서 실행결과와 같은 결과를 얻도록 하시오.**
+
+> 이전 채널의 값을 저장할 멤버변수를 정의하라.
+
+```java
+class MyTv2 { 
+
+	/*  
+	(1)문제 7-10의 MyTv2클래스에 gotoPrevChannel 메서드를 추가하여 완성하시오. 
+	*/
+
+}
+
+
+
+class Exercise7_5 {
+
+	public static void main(String args[]) {
+
+		MyTv2 t = new MyTv2();
+		t.setChannel(10);
+		System.out.println("CH:" + t.getChannel());
+		t.setChannel(20);
+		System.out.println("CH:" + t.getChannel());
+		t.gotoPrevChannel();
+		System.out.println("CH:" + t.getChannel());
+		t.gotoPrevChannel();
+		System.out.println("CH:" + t.getChannel());
+	}
+}
+
+[실행결과]
+
+CH:10
+
+CH:20
+
+CH:10
+
+CH:20
+```
+
+* (1)
+
+  ```java
+  	public void setChannel(int channel) {
+  		Prevchannel=this.channel;
+		this.channel=channel;
+  		if (channel >MIN_CHANNEL || MAX_CHANNEL > channel)
+  			return;
+  
+    private int Prevchannel;
+  	
+  	public void getPrevChannel() {
+  	 setChannel(Prevchannel);
+  	}
+  	
+  ```
+  
+
+
+
+
+
+**[7-6] Outer클래스의 내부 클래스 Inner의 멤버변수 iv의 값을 출력하시오.**
+
+```java
+class Outer7_6 {
+	class Inner {
+		int iv = 100;
+	}
+}
+
+class Exercise7_6 {
+	public static void main(String[] args) { 
+
+		/* (1) 알맞은 코드를 넣어 완성하시오. */
+
+	}
+}
+
+[실행결과]
+100
+```
+
+* (1)
+
+  ```java
+  	Outer7_6 T = new Outer7_6();
+  	Outer7_6.Inner Te = T.new Inner();
+  	
+  	System.out.println(Te.iv);
+  ```
+
+
+
+**[7-7]Outer클래스의 내부 클래스 Inner의 멤버변수 iv의 값을 출력하시오.**
+
+```java
+class Outer7_7 {
+	class Inner {
+		int iv = 200;
+	}
+}
+
+class Exercise7_7 {
+	public static void main(String[] args) { 
+
+		/* (1) 알맞은 코드를 넣어 완성하시오. */
+
+	}
+}
+
+[실행결과]
+200
+```
+
+* (1)
+
+  ```java
+  		Outer7_7 T = new Outer7_7();
+  		Outer7_7.Inner Te = T.new Inner();
+  		
+  		System.out.println(Te.iv);
+  ```
+
+  
+
+
+
+**[7-8]다음과 같은 실행결과를 얻도록 (1)~(4)의 코드를 완성하시오.**
+
+```java
+class Outer {
+	int value = 10;
+
+	class Inner {
+		int value = 20;
+
+		void method1() {
+			int value = 30;
+
+			System.out.println(/* (1) */);
+			System.out.println(/* (2) */);
+			System.out.println(/* (3) */);
+
+		} // Inner 클래스의 끝
+	}// Outer클래스의 끝
+}
+
+class Exercise7_8 {
+	public static void main(String args[]) {
+
+		/* (4) 알맞은 코드를 넣어 완성하시오 . */
+
+		inner.method1();
+	}
+}
+
+[실행결과]
+30
+20
+10
+```
+
+* (1)
+
+  ```java
+  value
+  ```
+
+* (2)
+
+  ```java
+  this.value
+  ```
+
+* (3)
+
+  ```java
+  Outer.this.value
+  ```
+
+* (4)
+
+  ```java
+  		Outer outer = new Outer();
+  		Outer.Inner inner = outer.new Inner();
+  
+  		
+  		inner.method1();
+  ```
+
+
+
+**[7-9]아래의 EventHandler를 익명 클래스(annoymous class)로 변경하시오.**
+
+```java
+import java.awt.*;
+import java.awt.event.*;
+
+class Exercise7_9 {
+	public static void main(String[] args) {
+		Frame f = new Frame();
+		f.addWindowListener(new EventHandler());
+	}
+}
+
+
+
+class EventHandler extends WindowAdapter {
+	public void windowClosing(WindowEvent e) {
+		e.getWindow().setVisible(false);
+		e.getWindow().dispose();
+		System.exit(0);
+  }
+}
+```
+
+* 변경 후:
+
+  ```java
+  import java.awt.*;
+  import java.awt.event.*;
+  
+  public class Exercise7_9 {
+  	public static void main(String[] args) {
+  		Frame f = new Frame();
+  		f.addWindowListener(new WindowAdapter() {
+  		public void windowClosing(WindowEvent e) {
+  			e.getWindow().setVisible(false);
+  			e.getWindow().dispose();
+  			System.exit(0);
+  		}
+  	  }
+  	);
+  	}
+  }
+  ```
+
   
