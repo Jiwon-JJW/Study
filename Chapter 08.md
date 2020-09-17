@@ -39,16 +39,15 @@
   * RuntimeException클래스들: 프로그래머의 실수로 발생하는 예외
 
     * ex) 배열의 범위를 벗어남 (ArrayIndexOutOfBoundsException)
-
-      값이 null인 참조변수의 멤버를 호출하려 함 (NullPointerException)
-      클래스간의 형변환을 잘못함 (ClassCastException)
-      정수를 0으로 나누려고함 (ArithmeticException)
-
+* 값이 null인 참조변수의 멤버를 호출하려 함 (NullPointerException)
+    * 클래스간의 형변환을 잘못함 (ClassCastException)
+    * 정수를 0으로 나누려고함 (ArithmeticException)
+  
 * RuntimeException 클래스를 제외한 나머지 클래스들: 'Exception클래스들'
 
   * Exception클래스들: 사용자의 실수와 같은 외적인 요인 의해 발생하는 예외
     * ex) 존재하지 않는 파일의 이름을 입력함 (FileNotFoundException)
-      실수로 클래스의 이름을 잘못적음 (ClassNotFoundException)
+    * 실수로 클래스의 이름을 잘못적음 (ClassNotFoundException)
     * 입력한 데이터 형식이 잘못됨(DataFormatException)
 
 
@@ -526,7 +525,7 @@
     > 2. 예외가 발생한 곳은 제일 윗줄에 있는 method2라는 것과
     > 3. main메서드가 method1()을, 그리고 method1()은 method2()를 호출했다는 것을 알 수 있음.
 
-  * 예외가 발생한 메서드에서 예외처리를 하지 않고 자**신을 호출한 메서드에게 예외를 넘겨줄 수는 있지만,**
+  * 예외가 발생한 메서드에서 예외처리를 하지 않고 **자신을 호출한 메서드에게 예외를 넘겨줄 수는 있지만,**
     **이 것으로 예외가 처리된 것은 아니고 예외를 단순히 전달만 하는것.**
     그렇기 때문에 **어느 한 곳에서는 반드시 try-catch문으로 예외처리를 해주어야함**.
 
