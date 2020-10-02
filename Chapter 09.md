@@ -575,7 +575,7 @@
 * String클래스와 StringBuffer클래스가 유사한 점:
 
   1. 문자열을 저장하기 위한 char형 배열의 참조변수를 인스턴스 변수로 선언해놓고 있다.
-  2. StrinfBuffer인스턴스가 생성될 때, char형 배열이 생성되며 이 때 생성된 char형 배열을 인스턴스 변수 value가 참조하게 됨.
+  2. StringfBuffer인스턴스가 생성될 때, char형 배열이 생성되며 이 때 생성된 char형 배열을 인스턴스 변수 value가 참조하게 됨.
 
   ```java
   public final class StringBuffer implements java.io.Serializable {
@@ -1185,6 +1185,7 @@
 * 이외에도 내부적으로 객체 배열을 가지고 있는 Vector 클래스나 ArrayList클래스에 기본형 값을 저장해야할 때나 형변환이 필요할 때도 컴파일러가 자동적으로 코드를 추가함.
 
 * 오토박싱(autoboxing) :기본형 값을 래퍼클래스의 객체로 변환해 주는 것 
+
   언박싱(unboxig) : 래퍼클래스의 값을 기본형 객체로 변환해 주는 것.
 
   ```java
