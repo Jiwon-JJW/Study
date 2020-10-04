@@ -971,7 +971,7 @@
 * 래퍼 클래스들은 객체 생성 시에 생성자의 인자로 주어진 각 자료형에 알맞은 값을 내부적으로 저장하고 있음.
 
 * 래퍼클래스의 메서드:
-  ![image-20200922172536185](/Users/jeongjiwon/Library/Application Support/typora-user-images/image-20200922172536185.png)
+  ![image-20200922172536185](https://user-images.githubusercontent.com/69128652/95006189-93a80a80-063c-11eb-912b-0e7038614461.png)
 
 * 래퍼 클래스의 생성자는 매개변수로 문자열이나 각 자료형의 값들을 인자로 받음.
 * 주의해야할 것: 생성자의 매개변수로 문자열을 제공할 때, 각 자료형에 알맞은 문자열을 사용해야함.
@@ -1035,7 +1035,7 @@
 
 * 래퍼 클래스의 상속계층도를 보면, 기본형 중에서 숫자와 관련된 래퍼 클래스들은 모두 Number클래스의 자손이라는 것을 알 수 있다.
 
-  ![image-20200922175557220](/Users/jeongjiwon/Library/Application Support/typora-user-images/image-20200922175557220.png)
+  ![image-20200922175557220](https://user-images.githubusercontent.com/69128652/95006183-7e32e080-063c-11eb-90b0-ced9c1b0be12.png)
 
 * Number클래스 자손으로 BigInteger와 BigDecimal 등이 있는데, BigInteger는 long으로도 다룰 수 없는 큰 범위의 정수를, BigDecimal은 double로도 다룰 수 없는 큰 범위의 부동 소수점수를 처리하기 위한 것으로 연산자의 역할을 대신하는 다양한 메서드를 제공.
 
