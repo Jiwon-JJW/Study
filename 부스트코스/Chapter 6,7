@@ -1,0 +1,120 @@
+## 데이터와 연산
+
+* 숫자(Numbers)
+  * +, *, -, /
+* 문자열(String)
+  * length, substring
+* 영상/소리/기타 등등
+
+
+
+* 이를 구분하는 이유는, 데이터마다 처리하는 방식이 다르기 때문.
+
+
+
+
+
+### 자바의 데이터 타입
+
+```java
+public class Datatype {
+	public static void main(String[] args) {
+		System.out.println(6); 	     // Number  
+		System.out.println("Six");   // String
+		
+		System.out.println("6");     // String 6
+		
+		System.out.println(6+6);     // 12
+		System.out.println("6"+"6"); // 66 < 결합 연산자가 됨.
+		
+		System.out.println(6*6);	 // 36
+//		System.out.println("6"*"6"); // Error 발생.
+		
+		System.out.println("1111".length()); // 4 문자열의 길이를 알려주는 연산.
+//		System.out.println(1111.length()); 	 // 이러한 연산은 존재하지 않음.
+		
+		// 타입에 어울리는 연산법이 있기 때문에, 타입을 엄격하게 분류한다.
+		// 1. 해당 프로그램에 어떤 종류의 데이터 타입이 있는지 알아가기.
+		// 2. 각각의 데이터 타입별로 어떤 연산 방법들이 존재하나 알아가기.
+		
+	}
+}
+```
+
+
+
+### 숫자와 연산
+
+```java
+public class Number {
+	public static void main(String[] args) {
+		// Operator (연산자) 
+		System.out.println(6+2); // 8
+		System.out.println(6-2); // 4
+		System.out.println(6*2); // 12
+		System.out.println(6/2); // 3
+		
+		System.out.println(Math.PI); // 3.141592653589793
+		System.out.println(Math.floor(Math.PI)); //3.0 내림 
+		System.out.println(Math.ceil(Math.PI));  //4.0 올림 
+	}
+}
+```
+
+
+
+
+
+### 문자열의 표현
+
+```java
+public class StringApp {
+	public static void main(String[] args) {
+		System.out.println("Hello World"); // String
+//		System.out.println('Hello World'); // Error! ''==Character
+		System.out.println('H'); 		   // Character
+		System.out.println("H");
+		
+		System.out.println("Hello "
+				+ "World"); // 중간에 엔터를 넣으면, 이클립스 내에서 자동적으로 + 를 넣어줌. 줄바꾸기는 아님.
+		
+		// new Line
+		System.out.println("Hello \nWorld"); 
+		
+		// escape
+		System.out.println("Hello \"World\""); //Hello "World"
+		
+	}
+}
+```
+
+
+
+
+
+### 문자열 다루기
+
+```java
+public class StringOperation {
+	public static void main(String[] args) {
+		
+		System.out.println("Hello World".length()); // 문자열의 글자수를 알려준다.
+		System.out.println("Hello, [[[name]]] ... bye".replace("[[[name]]]", "egoing")); // 글 바꾸기
+		
+		// 문자열과 관련된 기능을 이용해, 여러 문제를 해결할 수 있다.
+	}
+}
+```
+
+
+
+### 작심삼일이 되었을 때 어떻게 해야 할까
+
+* 절대 "나는 의지가 박약이다" 라고 생각하지 않기.
+
+* 과감히 공부를 중단 후, 배운 것을 되새겨 보며 삶의 문제들과 연결지어 보고, 실제로 해결하기 위해 노력해 본다.
+* 이 작업으로 우리가 배우고 있는 것들이 우리의 삶에 쓸모있다는 것을 뇌에 증명할 수 있는 것이다.
+* 뇌의 흥분도가 올라가고, "더 공부해도 좋다"는 명령을 내리게 된다.
+
+* **일을 해야할 때와 공부를 해야할 때를 주체적으로 판단할 수 있는 사람이 되자.**
+
