@@ -418,13 +418,441 @@
 
 
 
-#### String클래스의 생성자와 메서드 목록
+### String클래스의 생성자와 메서드 목록
 
-![image](https://user-images.githubusercontent.com/69128652/93695273-d43d5980-fb4f-11ea-853d-5168500c0487.png)
+* **String(String s)**
 
-![image](https://user-images.githubusercontent.com/69128652/93695279-dacbd100-fb4f-11ea-960f-705f695fea01.png)
+  * 주어진 문자열(s)을 갖는 String인스턴스를 생성한다.
 
-![image](https://user-images.githubusercontent.com/69128652/93695285-e15a4880-fb4f-11ea-923d-d4c2d8a7bd76.png)
+  ```java
+  String s= new String("Hello");
+  ```
+
+  > 결과: 
+  > s= "Hello"
+
+* **String(char[] value)**
+
+  * 주어진 문자열(value)을 갖는 String인스턴스를 생성한다.
+
+  ```java
+  char[] c = {'H', 'e', 'l, 'l', 'o'}<br />String s = new String(c);
+  ```
+
+  > 결과:
+  > s= "Hello"
+
+* **String(StringBuffer buf)**
+
+  * StringBuffer인스턴스가 갖고 있는 문자열과 같은 내용의 String 인스턴스를 생성한다.
+
+  ```java
+  StringBuffer sb =
+    new StringBuffer("Hello");
+  	String s = new String(sb);
+  ```
+
+  > 결과:
+  >
+  > s= "Hello"
+
+* **char charAt(int index)**
+
+  * 지정된 위치(index)에 있는 문자를 알려준다.(index는 0부터 시작)
+
+  ```java
+  String s = "Hello";
+  String n = "0123456";
+  char c = s.charAt(1);
+  char c2 = n.charAt(1);
+  ```
+
+  > 결과:
+  >
+  > c = 'e'
+  >
+  > c2 = '1'
+
+* **String concat(String str)**
+
+  * 문자열(str)을 뒤에 덧붙인다.
+
+  ```java
+  String s = "Hello";
+  String s2 = s.concat("World");
+  ```
+
+  > 결과:
+  > s2 = "Hello World"
+
+* **boolean contains(CharSequence s)**
+
+  * 지정된 문자열(s)이 포함되었는지 검사한다.
+
+  ```java
+  String s = "abcdefg";
+  boolean b = s.contains("bc");
+  ```
+
+  > 결과:
+  >
+  > b = true
+
+* **boolean endsWith(String suffix)**
+
+  * 지정된 문자열(suffix)로 끝나는지 검사한다.
+
+  ```java
+  String file = "Hello.txt";
+  boolean b = file.endsWith("txt");
+  ```
+
+  > 결과:
+  >
+  > b = true
+
+* **boolean equals(Object obj)**
+
+  * 매개변수로 받은 문자열(obj)과 String인스턴스의 문자열을 비교한다.
+    obj가 String이 아니거나, 문자열이 다르면 false를 반환한다.
+
+  ```java
+  String s = "Hello";
+  boolean b = s.equals("Hello");
+  boolean b2 = s.equals("hello");
+  ```
+
+  > 결과:
+  >
+  > b = true
+  >
+  > b2 = false
+
+* **boolean equalsIgnoreCase(String str)**
+
+  * 문자열과 String인스턴스의 문자열을 대소문자 구분없이 비교한다.
+
+  ```java
+  String s = "Hello";
+  boolean b = s.equalsIgnoreCase("HELLO");
+  boolean b2 = s.equalsIgnoreCase("hello");
+  ```
+
+  > 결과:
+  >
+  > b = true
+  >
+  > b2 = true
+
+* **int indexOf(int ch)**
+
+  * 주어진 문자(ch)가 문자열에 존재하는지 확인하여 위치(index)를 알려준다.
+    못 찾으면 -1 을 반환한다.(index는 0부터 시작.)
+
+  ```java
+  String s = "Hello";
+  int idx1 = s.indexOf('o');
+  int idx2 = s.indexOf('k');
+  ```
+
+  > 결과:
+  >
+  > idx1 = 4
+  >
+  > idx2 = -1
+
+* **int indexOf(String str)**
+
+  * 주어진 문자열이 존재하는지 확인하여 그 위치(index)를 알려준다.
+    못 찾으면 -1을 반환한다.(index는 0부터 시작.)
+
+  ```java
+  String s = "ABCDEFG";
+  int idx = s.indexOf("CD")
+  ```
+
+  > 결과:
+  >
+  > idx = 2
+
+* **String intern()**
+
+  * 문자열을 constant pool에 등록한다. 이미 constant pool에 같은 내용의 문자열이 있을 경우,
+    그 문자열의 주소값을 반환한다.
+
+  ```java
+  String s = new String("abc");
+  String s2 = new String("abc");
+  boolean b = (s==s2);
+  boolean b2 = s.equals(s2);
+  boolean b3 = (s.intern()==s2.intern());
+  ```
+
+  > 결과:
+  >
+  > b= false
+  >
+  > b2 = true
+  >
+  > b3 = true
+
+* int lastIndexOf(int ch)
+
+  * 지정된 문자 또는 문자코드를 문자열의 오른쪽 끝에서 부터 찾아서 위치(index)를 알려준다.
+    못 찾으면 -1 을 반환한다.
+
+  ``` java
+  String s = "java.lang.Object";
+  int idx1 = s.lastIndexOf('.');
+  int idx2 = s.indexOf('.');
+  ```
+
+  > 결과:
+  >
+  > idx1 = 9
+  >
+  > idx2 = 4
+
+* **int lastIndexOf(String str)**
+
+  * 지정된 문자열을 인스턴스의 문자열 끝에서 부터 찾아서 위치(index)를 알려준다.
+    못 찾으면 -1을 반환한다.
+
+  ```java
+  String s = "java.lang.java";
+  int idx1 = s.lastIndexOf("java");
+  int idx2 = s.IndexOf("java");
+  ```
+
+  > 결과:
+  >
+  > idx1 = 10
+  >
+  > idx2 = 0
+
+* **int length()**
+
+  * 문자열의 길이를 알려준다.
+
+  ```java
+  String s = "Hello";
+  int length = s.length();
+  ```
+
+  > 결과:
+  >
+  > length = 5
+
+* **String replace(char old, char nw)**
+
+  * 문자열 중의 문자(old)를 새로운 문자(nw)로 바꾼 문자열을 반환한다.
+
+  ```java
+  String s = "Hello";
+  String s1 = s.replace('H','C');
+  ```
+
+  > 결과:
+  >
+  > s1 = "Cello"
+
+* **String replace(CharSequence old, CharSequence nw)**
+
+  * 문자열 중의 문자열(old)를 새로운 문자열(nw)로 모두 바꾼 문자열을 반환한다.
+
+  ```java
+  String s = "Hellollo";
+  String s1 = s.replace("ll","LL");
+  ```
+
+  > 결과:
+  >
+  > s1 = "HeLLoLLo"
+
+* **String replaceAll(String regex, String replacement)**
+
+  * 문자열 중에서 지정된 문자열(regex)과 일치하는 것을 새로운 문자열(replacement)로 모두 변경한다.
+
+  ```java
+  String ab = "AABBAABB";
+  String r = ab.replaceAll("BB","bb");
+  ```
+
+  > 결과:
+  >
+  > r = "AAbbAAbb"
+
+* **String replaceFirst(String regex, String replacement)**
+
+  * 문자열 중에서 지정된 문자열(regex)과 일치 하는 것 중, 첫 번째 것만 새로운 문자열(replacement)로 변경한다.
+
+  ```java
+  String ab = "AABBAABB";
+  String r = ab.replaceFirst("BB","bb");
+  ```
+
+  > 결과:
+  >
+  > r = "AAbbAABB"
+
+* **String[] split(String regex)**
+
+  * 문자열을 지정된 분리자(regex)로 나누어 문자열 배열에 담아 반환한다.
+
+  ```java
+  String animals = "dog,cat,bear";
+  String[] arr = animals.split(",");
+  ```
+
+  > 결과:
+  >
+  > arr[0] = "dog"
+  >
+  > arr[1] = "cat"
+  >
+  > arr[2] = "bear"
+
+* **String[] split(String regex, int limit)**
+
+  * 문자열을 지정된 분리자(regex)로 나누어 문자열 배열에 담아 반환한다.
+    단, 문자열 전체를 지정된 수(limit)로 자른다.
+
+  ```java
+  String animals = "dog,cat,bear";
+  String[] arr = animals.split(",",2);
+  ```
+
+  > 결과:
+  >
+  > arr[0] = "dog"
+  >
+  > arr[1] = "cat, bear"
+
+* **boolean startsWith(String prefix)**
+
+  * 주어진 문자열(prefix)로 시작하는지 검사한다.
+
+  ```java
+  String s = "java.lang.Object";
+  boolean b = s.startsWith("java");
+  boolean b2 = s.startsWith("lang");
+  ```
+
+  > 결과:
+  >
+  > b = true
+  >
+  > b2 = false
+
+* **String substring(int begin)**
+  **String substring(int begin, int end)**
+
+  * 주어진 시작위치(begin)부터 끝 위치(end) 범위에 포함된 문자열을 얻는다.
+    이 때, 시작위치의 문자는 범위에 포함되지만, 끝 위치의 문자는 포함되지 않는다.
+
+  ```java
+  String s = "java.lang.object";
+  String c = s.substring(10);
+  String p = s.substring(5,9);
+  ```
+
+  > 결과:
+  >
+  > c = "object"
+  >
+  > p = "lang"
+
+* **String toLowerCase()**
+
+  * String 인스턴스에 저장되어있는 모든 문자열을 소문자로 변환하여 반환한다.
+
+  ```java
+  String s = "Hello";
+  String s1 = s.toLowerCase();
+  ```
+
+  > 결과:
+  >
+  > s1 = "hello"
+
+* **String toString()**
+
+  * String인스턴스에 저장되어있는 문자열을 반환한다.
+
+  ```java
+  String s = "Hello";
+  String s1 = s.toString();
+  ```
+
+  > 결과:
+  >
+  > s1 = "Hello"
+
+* **String toUpperCase()**
+
+  * String 인스턴스에 저장되어있는 모든 문자열을 대문자로 변환하여 반환한다.
+
+  ```java
+  String s = "Hello";
+  String s1 = s.toUpperCase();
+  ```
+
+  > 결과:
+  >
+  > s1 = "HELLO"
+
+* **String trim()**
+
+  * 문자열의 왼쪽 끝과 오른쪽 끝에 있는 공백을 없앤 결과를 반환한다.
+    이 때 문자열 중간에 있는 공백은 제거되지 않는다.
+
+  ```java
+  String s = "   Hello World    ";
+  String s1 = s.trim();
+  ```
+
+  > 결과:
+  >
+  > s1 = "Hello World"
+
+* **static String valueOf(boolean b)**
+  **static String valueOf(char c)**
+  **static String valueOf(int i)**
+  **static String valueOf(lang l)**
+  **static String valueOf(float f)**
+  **static String valueOf(double d)**
+  **static String valueOf(Object o)**
+
+  * 지정된 값을 문자열로 변환하여 반환한다.
+    참조변수의 경우, toString()을 호출한 결과를 반환한다.
+
+  ```java
+  String b = String.valueOf(true);
+  String c = String.valueOf('a');
+  String i = String.valueOf(100);
+  String l = String.valueOf(100L);
+  String f = String.valueOf(10f);
+  String d = String.valueOf(10.0);
+  
+  java.util.Date dd = new java.util.Date();
+  String date = String.valueOf(dd);
+  ```
+
+  > 결과:
+  >
+  > b = true
+  >
+  > c = "a"
+  >
+  > i = "100"
+  >
+  > l = "100"
+  >
+  > f = "10.0"
+  >
+  > d = "10.0"
+  >
+  > date = "Sun 27 21:26:29 KST 2008"
 
 
 
@@ -732,14 +1160,263 @@
 
 
 
-#### StringBuffer의 생성자와 메서드
+### StringBuffer의 생성자와 메서드
 
 * String클래스와 유사한 메서드를 많이 가지고 있다.
 * StringBuffer는 추가, 변경, 삭제와 같이 저장된 내용을 변경할 수 있는 메서드들이 추가로 제공됨.
 
-![image](https://user-images.githubusercontent.com/69128652/93853390-c1ad5680-fcee-11ea-97a0-c8d6c63d10a5.png)
+---
 
-![image](https://user-images.githubusercontent.com/69128652/93853434-d1c53600-fcee-11ea-9689-2a068132df88.png)
+* **StringBuffer()**
+
+  * 16문자를 담을 수 있는 버퍼를 가진 StringBuffer 인스턴스를 생성한다.
+
+  ```java
+  StringBuffer sb = new StringBuffer();
+  ```
+
+  > 결과:
+  > sb = ""
+
+* **StringBuffer(int length)**
+
+  * 지정된 개수의 문자를 담을 수 있는 버퍼를 가진 StringBuffer인스턴스를 생성한다.
+
+  ```java
+  StringBuffer sb = new StringBuffer(10);
+  ```
+
+  > 결과:
+  >
+  > sb = " "
+
+* **StringBuffer(String str)**
+
+  * 지정된 문자열 값(str)을 갖는 StringBuffer 인스턴스를 생성한다.
+
+  ```java
+  StringBuffer sb = new StringBuffer("Hi");
+  ```
+
+  > 결과:
+  >
+  > sb = "Hi"
+
+* **StirngBuffer append(boolean b)**
+  **StringBuffer append(char c)**
+  **StringBuffer append(char[] str)**
+  **StringBuffer append(double d)**
+  **StringBuffer append(float f)**
+  **StringBuffer append(int i)**
+  **StringBuffer append(long l)**
+  **StringBuffer append(Object obj)**
+  **StringBuffer append(String str)**
+
+  * 매개변수로 입력된 값을 문자열로 변환하여 StringBuffer인스턴스가 저장하고 있는 문자열의 뒤에 덧붙인다.
+
+  ```java
+  StringBuffer sb = new StringBuffer("abc");
+  StringBuffer sb2 = sb.append(true);
+  sb.append('d').append(10.0f);
+  StringBuffer sb 3 = sb.append("ABC").append(123);
+  ```
+
+  > 결과:
+  >
+  > sb = "abctrued10.0ABC123"
+  > sb2 = "abctrued10.0ABC123"
+  >
+  > sb3 = "abctrued10.0ABC123"
+
+* **int capacity()**
+
+  * StringBuffer 인스턴스의 버퍼크기를 알려준다. length()는 버퍼에 담긴 문자열의 크기를 알려준다.
+
+  ```java
+  StringBuffer sb = new StringBuffer(100);
+  sb.append("abcd");
+  int bufferSize = sb.capacity();
+  int stringSize = sb.length();
+  ```
+
+  > 결과:
+  > bufferSize = 100
+  >
+  > stringSize = 4(sb에 담긴 문자열이 "abcd"이므로)
+
+* **char charAt(int index)**
+
+  * 지정된 위치(index)에 있는 문자를 반환한다.
+
+  ```java
+  StringBuffer sb = new StringBuffer("abc");
+  char c = sb.charAt(2);
+  ```
+
+  > 결과:
+  >
+  > c = 'c'
+
+* **StringBuffer delete(int start, int end)**
+
+  * 시작위치(start)부터 끝 위치(end) 사이에 있는 문자를 제거한다.
+    단, 끝 위치의 문자는 제외
+
+  ```java
+  StringBuffer sb = new StringBuffer("0123456");
+  StringBuffer sb2 = sb.delete(3,6);
+  ```
+
+  > 결과:
+  >
+  > sb = "0126"
+  >
+  > sb2 = "0126"
+
+* StringBuffer deleteCharAt(int index)
+
+  * 지정된 위치(index)의 문자를 제거한다.
+
+  ```java
+  StringBuffer sb = new StringBuffer("0123456");
+  sb.deleteCharAt(3);
+  ```
+
+  > 결과: 
+  >
+  > sb = "012456"
+
+* **StirngBuffer insert(int pos, boolean b)**
+  **StringBuffer insert(int pos, char c)**
+  **StringBuffer insert(int pos, char[] str)**
+  **StringBuffer insert(int pos, double d)**
+  **StringBuffer insert(int pos, float f)**
+  **StringBuffer insert(int pos, int i)**
+  **StringBuffer insert(int pos, long l)**
+  **StringBuffer insert(int pos, Object obj)**
+  **StringBuffer insert(int pos, String str)**
+
+  * 두 번째 매개변수로 받은 값을 문자열로 변환하여 지정된 위치(pos)에 추가한다.
+    pos는 0부터 시작
+
+  ```java
+  StringBuffer sb = new StringBuffer("0123456");
+  sb.insert(4,'.');
+  ```
+
+  > 결과:
+  >
+  > sb = "0123.456"
+
+* **int length()**
+
+  * StringBuffer인스턴스에 저장되어있는 문자열의 길이를 반환한다.
+
+  ```java
+  StringBuffer sb = new StringBuffer("0123456");
+  int length = sb.length();
+  ```
+
+  > 결과:
+  >
+  > length = 7
+
+* **StringBuffer replace(int start, int end, String str)**
+
+  * 지정된 범위(start~ end)의 문자들을 주어진 문자열로 바꾼다. end위치의 문자는 범위에 포함안됨.
+
+  ```java
+  StringBuffer sb = new StringBuffer("0123456");
+  sb.replace(3, 6, "AB");
+  ```
+
+  > 결과:
+  >
+  > sb = "012AB6"
+  >
+  > > "345"를 AB로 바꿨다.
+
+* **StringBuffer reverse()**
+
+  * StringBuffer인스턴스에 저장되어 있는 문자열의 순서를 거꾸로 나열한다.
+
+  ```java
+  StringBuffer sb = new StringBuffer("0123456");
+  sb.reverse();
+  ```
+
+  > 결과:
+  >
+  > sb = "6543210"
+
+* **void setCharAt(int index, char ch)**
+
+  * 지정된 위치의 문자를 주어진 문자(ch)로 바꾼다.
+
+  ```java
+  StringBuffer sb = new StringBuffer("0123456");
+  sb.srtCharAt(5, 'o');
+  ```
+
+  > 결과:
+  >
+  > sb = "01234o6"
+
+* **void setLength(int newLength)**
+
+  * 지정된 크기로 문자열의 길이를 변경한다.
+    크기를 늘리는 경우, 나머지 빈 공간을 널 문자'₩u0000'로 채운다.
+
+  ```java
+  StringBuffer sb = new StringBuffer("0123456");
+  sb.setLength(5);
+  StringBuffer sb2=new StringBuffer("0123456");
+  sb2.setLength(10);
+  String str = sb2.toString().trim();
+  ```
+
+  > 결과:
+  >
+  > sb = "01234"
+  >
+  > sb2 = "0123456    "
+  >
+  > str = "0123456"
+
+* **String toString()**
+
+  * StringBuffer인스턴스의 문자열을 String으로 반환한다.
+
+  ```java
+  StringBuffer sb = new StringBuffer("0123456");
+  String str = sb.toString;
+  ```
+
+  > 결과:
+  >
+  > str = "0123456"
+
+* **String substring(int start)**
+  **String substring(int start, int end)**
+
+  * 지정된 범위 내의 문자열을 String으로 뽑아서 반환한다.
+    시작위치(start)만 지정하면 시작 위치부터 문자열 끝까지 뽑아서 반환한다.
+
+  ```java
+  StringBuffer sb = new StringBuffer("0123456");
+  String str = sb.substring(3);
+  String str2 = sb.substring(3,5);
+  ```
+
+  > 결과:
+  >
+  > str = "3456"
+  >
+  > str2 = "34"
+
+
+
+---
 
 
 
@@ -869,7 +1546,161 @@
 
 ### Math의 메서드
 
-![image](https://user-images.githubusercontent.com/69128652/93857331-62067980-fcf5-11ea-942c-11b22aabf40e.png)
+* **static int abs(int f)**
+  **static long abs(long f)**
+  **static float abs(float f)**
+  **static double abs(double a)**
+
+  * 주어진 값의 절대값을 반환한다.
+
+  ```java
+  int i = Math.abs(-10);
+  double d = Math.abs(-10.0);
+  ```
+
+  > 결과:
+  >
+  > i = 10
+  >
+  > d = 10.0
+
+* **static double ceil(double a)**
+
+  * 주어진 값을 올림하여 반환한다.
+
+  ```java
+  double d = Math.ceil(10.1);
+  double d2 = Math.ceil(-10.1);
+  double d3 = Math.ceil(10.0000015);
+  ```
+
+  > 결과:
+  >
+  > d = 11.0
+  >
+  > d2 = -10.0
+  >
+  > d3 = 11.0
+
+* **static double floor(double a)**
+
+  * 주어진 값을 버림하여 반환한다.
+
+  ```java
+  double d = Math.floor(10.8);
+  double d2 = Math.floor(-10.8);
+  ```
+
+  > 결과:
+  >
+  > d = 10.0
+  >
+  > d2 = -11.0
+
+* **static int max(int a, int b)**
+  **static float max(float a, float b)**
+  **static long max(long a, long b)**
+  **static double max(double a, double b)**
+
+  * 주어진 두 값을 비교하여 큰 쪽을 반환한다.
+
+  ```java
+  double d = Math.max(9.5, 9.50001);
+  int i = Math.max(0, -1);
+  ```
+
+  > 결과:
+  >
+  > d = 9.50001
+  >
+  > i = 0
+
+* **static int min(int a, int b)**
+  **static float min(float a, float b)**
+  **static long min(long a, long b)**
+  **static double min(double a, double b)**
+
+  * 주어진 두 값을 비교하여 작은쪽을 반환한다.
+
+  ```java
+  double d = Math.min(9.5, 9.50001);
+  int i = Math.min(0, -1);
+  ```
+
+  > 결과: 
+  >
+  > d = 9.5
+  >
+  > i = -1
+
+* **static double random()**
+
+  * 0.0~1.0범위의 임의의 double값을 반환한다.
+    0.0은 범위에 포함되지만, 1.0은 포함 안됨.
+
+  ```java
+  double d = Math.random();
+  int i = (int)(Math.random()*10)+1
+  ```
+
+  > 결과:
+  >
+  > d = 0.0~1.0의 실수
+  >
+  > i = 1~10의 정수
+
+* **static double rint(double a)**
+
+  * 주어진 double값과 가장 가까운 정수값을 double형으로 반환한다.
+
+  ```java
+  double d = Math.rint(5.55);
+  double d2 = Math.rint(5.11);
+  double d3 = Math.rint(-5.55);
+  double d4 = Math.rint(-5.11);
+  ```
+
+  > 결과:
+  >
+  > d = 6.0
+  >
+  > d2 = 5.0
+  >
+  > d3 = -6.0
+  >
+  > d4 = -5.0
+
+* static long round(double a)
+  static long round(float a)
+
+  * 소수점 첫째자리에서 반올림한 정수값(long)을 반환한다.
+
+  ```java
+  long l = Math.round(5.55);
+  long l2 = Math.round(5.11);
+  long l3 = Math.round(-5.55);
+  long l4 = Math.round(-5.11);
+  double d = 90.7552;
+  double d2 = Math.round(d*100)/100.0;
+  ```
+
+  > 결과:
+  >
+  > l = 6
+  >
+  > l2 = 5
+  >
+  > l3 = -6
+  >
+  > l4 = -5
+  >
+  > d = 90.7552
+  >
+  > d2 = 90.76
+
+
+
+---
 
 
 
@@ -971,9 +1802,20 @@
 * 래퍼 클래스들은 객체 생성 시에 생성자의 인자로 주어진 각 자료형에 알맞은 값을 내부적으로 저장하고 있음.
 
 * 래퍼클래스의 메서드:
-  ![image-20200922172536185](https://user-images.githubusercontent.com/69128652/95006189-93a80a80-063c-11eb-912b-0e7038614461.png)
-
+  
+| 기본형  | 래퍼클래스 | 생성자                                                       | 활용예                                                       |
+  | ------- | ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+  | boolean | Boolean    | Boolean(boolean value)<br />Boolean(String s)                | Boolean b = new Boolean(true);<br />Boolean b2 = new Boolean("true"); |
+  | char    | Character  | Character(char vlaue)                                        | Character c = new Character('a');                            |
+  | byte    | Byte       | Byte(byte value)<br />Byte(String s)                         | Byte b = new Byte(10);<br />Byte b2 = new Byte("10");        |
+  | short   | Short      | Short(short value)<br />Short(String s)                      | Short s = new Short(10);<br />Short s2 = new Short("10");    |
+  | int     | Integer    | Integer(int value)<br />Integer(String s)                    | Integer i = new Integer(100);<br />Integer i2 = new Integer("100"); |
+  | long    | Long       | Long(long value)<br />Long(String s)                         | Long l = new Long(100);<br />Long l2 = new Long("100");      |
+  | float   | Float      | Float(double value)<br />Float(float value)<br />Float(String s) | Float f = new Float(1.0);<br />Float f2 = new Float(1.0f);<br />Float f3 = new Float("1.0f"); |
+  | double  | Double     | Double(double value)<br />Double(String s)                   | Double d = new Double(1.0);<br />Double d2 = new Double("1.0"); |
+  
 * 래퍼 클래스의 생성자는 매개변수로 문자열이나 각 자료형의 값들을 인자로 받음.
+
 * 주의해야할 것: 생성자의 매개변수로 문자열을 제공할 때, 각 자료형에 알맞은 문자열을 사용해야함.
 
 
