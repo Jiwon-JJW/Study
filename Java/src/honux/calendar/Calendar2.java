@@ -26,21 +26,54 @@ public class Calendar2 {
 			Calendar2 cal = new Calendar2();
 			
 			// cal.printSampleCalendar();
-			
 			System.out.println("반복 횟수를 입력하세요");
+
 			int num = scanner.nextInt();
 			
+			if(num<=0) {
+				System.out.println("0이상 입력해주세요.");
+			}
+			for(int i = 0;i<num;i++) {
+				
+			int month = 1;
+			while(true) {
+				System.out.println("월을 입력하세요.");
+				System.out.println("cal> ");
+				month = scanner.nextInt();
+				
+				if(month<=0) {
+					System.out.println("입력이 올바르지 않습니다.");
+					break;
+				}else {
+					System.out.printf("%d월은 %d일까지 있습니다.%n", month,cal.getMaxDaysOfMonth(month));
+				}
+
+				break;
+				}
+			if(month<=0) {
+				break;
+			}
+			}
+			System.out.println("완료되었습니다.");
+			
+			/* 1. 수정 전
 			for(int i=0;i<num;i++) {
 			
 			System.out.println("월을 입력하세요");
+			System.out.print("cal> ");
 			int month = scanner.nextInt();
 			
+			if(month<=0) {
+				System.out.println("입력이 올바르지 않습니다.");
+			}
 			
 			System.out.printf("%d월은 %d일까지 있습니다.%n", month,cal.getMaxDaysOfMonth(month));
 			
 			
 			}
 			System.out.println("완료되었습니다.");
+			*/
+			
 			scanner.close();
 
 	}
