@@ -35,17 +35,19 @@ public class Prompt {
 				break;
 			}
 			
-			System.out.println("첫째날의 요일을 입력하세요.(요일을 제외하고 입력.)");
-			System.out.println("DAY> ");
-			String day = scanner.next();
-			weekday = cal.parseDay(day);
-			System.out.println(day+weekday);
+//			System.out.println("첫째날의 요일을 입력하세요.(요일을 제외하고 입력.)");
+//			System.out.println("DAY> ");
+//			String day = scanner.next();
+//			weekday = cal.allday(year);
+//			System.out.println(day+weekday);
 			
-			if(weekday>6) {
-				System.out.println("입력이 올바르지 않습니다.");
-			}else {
-				cal.SampleCalendar(year,month,weekday);
-			}
+//			if(weekday>6) {
+//				System.out.println("입력이 올바르지 않습니다.");
+//			}else {
+//				cal.SampleCalendar(year,month,weekday);
+//			}
+			
+			cal.SampleCalendar(year,month,weekday);
 		}
 		scanner.close();
 	}
