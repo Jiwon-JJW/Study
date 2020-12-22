@@ -1,0 +1,23 @@
+public class AccountingApp {
+    public static void main(String[] args) {
+
+        double valueOfSupply = Double.parseDouble(args[0]);
+        double VAT = valueOfSupply * 0.1;
+        double total = VAT + valueOfSupply;
+        double Expense = valueOfSupply * 0.3;
+        double Income = valueOfSupply - Expense;
+        double Dividend1 = Income * 0.5;
+        double Dividend2 = Income * 0.3;
+        double Dividend3 = Income * 0.2;
+
+        System.out.println("Value of supply : " + valueOfSupply);
+        System.out.println("VAT : " + VAT);
+        System.out.println("Total : " + total);
+        System.out.println("Expense : " + Expense);
+        System.out.println("Income : " + Income);
+        System.out.println("Dividend1 : " + Dividend1);
+        System.out.println("Dividend1 : " + Dividend2);
+        System.out.println("Dividend1 : " + Dividend3);
+
+    }
+}
