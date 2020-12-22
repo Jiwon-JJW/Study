@@ -364,6 +364,3 @@ public class OkJavaGoInHomeInput {
 * Organize favorites 에서 자주 사용하는 Application을 즐겨찾기 할 수 있다.
 
 
-
-## 컴파일
-
