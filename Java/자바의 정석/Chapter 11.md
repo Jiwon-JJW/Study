@@ -1621,3 +1621,363 @@ public class Ex11_6 {
 | Object[] toArray()                                           | 저장된 객체를 객체배열로 반환한다.                           |
 | Object[] toArray(Object[] a)                                 | 저장된 객체를 주어진 객체배열에 저장하여 반환한다.           |
 
+
+
+* 예제 1:
+  예제 11 - 10 을 TreeSet으로 바꾼 것. - 로또 번호 추출.
+
+  ```java
+  import java.util.*;
+  
+  public class Ex11_13 {
+      public static void main(String[] args) {
+          Set set = new TreeSet();
+  
+          for(int i = 0; set.size() < 6; i++){
+              int num = (int)(Math.random()*45)+1;
+              set.add(num); // set.add(new Integer(num));와 같음.
+          }
+  
+          System.out.println(set);
+      }
+  }
+  
+  ```
+
+  > 위 식의 결과:
+  >
+  > [4, 6, 31, 32, 35, 40]
+
+  * 이전과는 달리, 정렬 기능을 넣지 않은 이유는, TreeSet은 저장 시 정렬하기 때문.
+
+
+
+* 예제 2:
+  검색기능을 이용한 예제
+
+  ```java
+  import java.util.*;
+  
+  public class Ex11_14 {
+      public static void main(String[] args) {
+          TreeSet set = new TreeSet();
+  
+          String from = "b";
+          String to = "d";
+  
+          set.add("abc");     set.add("alien");     set.add("bat");
+          set.add("car");     set.add("Car");     set.add("disc");
+          set.add("dance");     set.add("dZZZ");     set.add("dzzz");
+          set.add("elephant");     set.add("elevator");     set.add("fan");
+          set.add("flower");
+  
+          System.out.println(set);
+          System.out.println("range search: from " + from + " to " + to);
+          System.out.println("result 1 : "+ set.subSet(from, to));
+          System.out.println("result 2 : "+ set.subSet(from,to + "zzz"));
+  
+      }
+  }
+  ```
+
+  > 위 식의 결과: 
+  >  [Car, abc, alien, bat, car, dZZZ, dance, disc, dzzz, elephant, elevator, fan, flower]
+  > range search: from b to d
+  > result 1 : [bat, car]
+  > result 2 : [bat, car, dZZZ, dance, disc]
+
+  * 범위 검색 시, 시작범위는 포함되지만 끝 범위는 포함되지 않는다.
+    따라서, 끝범위까지 포함시키고 싶다면 `to + "zzz"`와 같이 끝범위에 문자열을 붙이면 됨.
+
+    > "dzzz" 뒤에 오는 단어가 없기 때문에, d로 시작된 모든 단어가 포함되는 것이다.
+
+  * 대문자가 소문자 보다 우선이기 때문에, 결과에서 dZZZ가 앞에 있는 것을 확인 할 수 있다.
+    따라서 대문자 혹은 소문자로 통일해서 저장하는게 좋음.
+
+
+
+
+
+* 예제 3:
+  특정 수 보다 작거나 큰 값을 얻는 예제
+
+  ```java
+  import java.util.*;
+  
+  public class Ex11_15 {
+      public static void main(String[] args) {
+          TreeSet set = new TreeSet();
+          int[] score = {80, 95, 50, 35, 45, 65, 10, 100};
+  
+          for(int i = 0; i < score.length; i ++){
+              set.add(new Integer(score[i])); // set.add(score[i]); 와 동일.
+          }
+  
+          System.out.println("50보다 작은 값 : "+ set.headSet(new Integer(50)));
+          System.out.println("50보다 큰 값 :"+ set.tailSet(new Integer(50)));
+      }
+  }
+  ```
+
+  > 결과:
+  > 50보다 작은 값 : [10, 35, 45]
+  > 50보다 큰 값 :[50, 65, 80, 95, 100]
+
+  * 예제의 값들로 이진검색 트리를 구성할 경우:
+    ![스크린샷 2020-12-28 오후 3 48 58](https://user-images.githubusercontent.com/69128652/103194849-33b3be00-4924-11eb-8a75-639310c3f940.png)
+
+
+
+
+
+## 17. HashMap과 Hashtable
+
+* HashMap과 Hashtable의 관계 = Vector와 ArrayList의 관계.
+
+  * Hashtable보다 새로운 버전인 HashMap을 사용하는 것이 더 좋다.
+
+* HashMap:
+
+  * Map을 구현한 것이라, Map과 같이 키(key)값 과 값(value)을 묶어, 하나의 데이터(entry)로 저장한다는 특징이 있다.
+  * 해싱(hashing)을 사용하기 때문에, 많은 양의 데이터를 검색하는 데 있어서, 뛰어난 성능을 보임.
+
+  
+
+  * HashMap이 데이터를 저장하는 방식:
+
+    ```java
+    public class HashMap extends AbstructMap implements Map, Cloneable, Serializable {
+      transient Entry[] table;
+      ...
+      static class Entry implements Map.Entry{
+        final Object key;
+        Object value;
+        		...
+      }
+    }
+    ```
+
+    > 실제 코드와 조금 다를 수 있다.
+    >
+    > Map.Entry: Map인터페이스에 정의된 'static inner interface'
+
+    * Entry라는 내부 클래스 정의 후, 다시 Entry타입의 배열을 선언함.
+      그 이유는, 키와 값은 별개의 값이 아니라 서로 관련이 되어있기 때문에, 각각의 배열 보다는 하나의 클래스로 정의하여
+      하나의 배열로 사용하는 것이 데이터의 무결성(integrity)적인 측면에서 바람직하기 때문.
+
+      | 비객체지향적인 코드                    | 객체지향적인 코드                                            |
+      | -------------------------------------- | ------------------------------------------------------------ |
+      | `Object[] key;`<br />`Object[] value;` | `Entry[] table;`<br />`class Entry { `<br />     `  Object key;`<br />   `Object value;`<br />`}` |
+
+
+
+
+
+### * HashMap의 키(key)와 값(value)
+
+* HashMap은 키와 값을 Object타입으로 저장함.
+  * 키는 주로 String을 대문자 또는 소문자로 통일해서 사용하곤 한다.
+* 키(key):
+  * 컬렉션 내의 키(key)중에서 유일(unique)해야함.
+    (하나의 키에 대해 여러 검색결과 값을 얻으면, 어떤 값이 원하는 값인지 알 수 없기 때문.)
+  * 저장된 값을 찾는데 사용됨.
+  * ID와 같다고 볼 수 있다.
+* 값(value):
+  * 데이터의 중복을 허용한다.
+  * 비밀번호와 같다고 볼 수 있다.
+
+
+
+### HashMap의 메서드
+
+| 생성자 / 메서드                                              | 설명                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| HashMap()                                                    | HashMap객체를 생성                                           |
+| HashMap(int initialCapacity)                                 | 지정된 값을 초기용량으로 하는 HashMap 생성                   |
+| HashMap(int initialCapacity, float loadFactor)               | 지정된 초기용량과 load factor의 HashMap객체를 생성           |
+| HashMap(Map m)                                               | 지정된 Map의 모든 요소를 포함하는 HashMap을 생성             |
+| void clear()                                                 | HashMap에 저장된 모든 객체를 제거                            |
+| Object clone()                                               | 현재 HashMap을 복제해서 반환                                 |
+| boolean containsKey(Object key)                              | HashMap에 지정된 키(key)가 포함되어있는지 알려준다.<br />(포함되어있으면 true) |
+| boolean containsValue(Object value)                          | HashMap에 지정된 값(value)가 포함되어있는지 알려준다.<br />(포함되어있으면 true) |
+| Set entrySet()                                               | HashMap에 저장된 키와 값을 엔트리(키와 값의 결합)의 형태로 <br />Set에 저장해서 반환 |
+| Object get(Object key)                                       | 지정된 키의 값(객체)을 반환. 못찾으면 null 반환              |
+| Object getOrDefault(Object key, Object defaultValue)         | 지정된 키의 값(객체)을 반환한다. 키를 못찾으면, 기본 값(defaultValue)으로<br />지정된 객체를 반환 |
+| boolean isEmpty()                                            | HashMap이 비어있는지 알려준다.                               |
+| Set keySet()                                                 | HashMap에 저장된 모든 키가 저장된 Set을 반환                 |
+| Object put(Object key, Object value)                         | 지정된 키와 값을 HashMap에 저장                              |
+| void putAll(Map m)                                           | Map에 저장된 모든 요소를 HashMap에 저장                      |
+| Object remove(Object key)                                    | HashMap에서 지정된 키로 저장된 값을 제거                     |
+| Object replace(Object key, Object oldValus, Object newValue) | 지정된 키의 값을 지정된 객체(value)로 대체                   |
+| boolean replace(Object key, Object oldValus, Object newValue) | 지정된 키와 객체(oldValue)가 모두 일치하는 경우에만 새로운 객체(new Value) 로 대체 |
+| int size()                                                   | HashMap에 저장된 요소의 개수를 반환                          |
+| Collection values()                                          | HashMap에 저장된 모든 값을 컬렉션의 형태로 반환              |
+
+
+
+* 예제 1:
+  HashMap생성 후, 아이디와 비밀번호를 키와 값의 쌍으로 저장하여 HashMap내에 검색해, 얻은 값을 입력된 값과 비교하는 예제.
+
+  ```java
+  import java.util.*;
+  
+  public class Ex11_16 {
+      public static void main(String[] args) {
+          HashMap map = new HashMap();
+          map.put("myId","1234");
+          map.put("asdf","1111");
+          map.put("asdf","1234"); // OK. 이미 존재하는 키 추가 가능. 대신, 기존 값은 없어진다. (중복을 허용하지 않기 때문)
+  
+          Scanner s = new Scanner(System.in); // 화면으로부터 라인단위로 입력받는다.
+  
+          while (true){
+              System.out.println("id와 password를 입력해주세요.");
+              System.out.print("id : ");
+              String id = s.nextLine().trim();
+  
+              System.out.print("password : ");
+              String password = s.nextLine().trim();
+              System.out.println();
+  
+              if(!map.containsKey(id)){
+                  System.out.println("입력하신 id는 존재하지않습니다. 다시 입력해주세요.");
+                  continue;
+              } else {
+                  if(!(map.get(id)).equals(password)) {
+                      System.out.println("비밀번호가 일치하지 않습니다. 다시 입력해주세요");
+                  } else {
+                      System.out.println("id와 비밀번호가 일치합니다.");
+                      break;
+                  }
+              }
+          } // while의 끝
+      }  // main의 끝
+  }
+  ```
+
+  > 위 코드의 결과:
+  > id와 password를 입력해주세요.
+  > id : ㅁㄴㅇㄹ
+  > password : 1234
+  >
+  > 입력하신 id는 존재하지않습니다. 다시 입력해주세요.
+  >
+  > 
+  >
+  > id와 password를 입력해주세요.
+  > id : asdf
+  > password : 1234
+  >
+  > id와 비밀번호가 일치합니다.
+
+
+
+* 예제 2:
+  HashMap에 값을 저장하여 시험 점수 및 참가자를 출력하는 예제
+
+  ```java
+  import java.util.*;
+  
+  public class Ex11_17 {
+      public static void main(String[] args) {
+          HashMap map = new HashMap();
+  
+          map.put("김자바", new Integer(90));
+          map.put("김자바", new Integer(100));
+          map.put("이자바", new Integer(100));
+          map.put("강자바", new Integer(80));
+          map.put("안자바", new Integer(90));
+  
+          Set set = map.entrySet();
+          Iterator it = set.iterator();
+  
+          while (it.hasNext()) {
+              Map.Entry e = (Map.Entry)it.next();
+              System.out.println("이름 :"+e.getKey()+", 점수:"+e.getValue());
+          }
+  
+          set = map.keySet();
+          System.out.println("참가자 명단:"+set);
+  
+          Collection values = map.values();
+          it = values.iterator();
+  
+          int total = 0;
+  
+          while (it.hasNext()){
+              Integer i = (Integer)it.next();
+              total += i.intValue();
+          }
+  
+          System.out.println("총점: "+total);
+          System.out.println("평균: "+(float)total/set.size());
+          System.out.println("최고점수: "+Collections.max(values));
+          System.out.println("최저점수: "+Collections.min(values));
+      }
+  }
+  ```
+
+  > 이 코드의 결과:
+  > 이름 :안자바, 점수:90
+  > 이름 :김자바, 점수:100
+  > 이름 :강자바, 점수:80
+  > 이름 :이자바, 점수:100
+  > 참가자 명단:[안자바, 김자바, 강자바, 이자바]
+  > 총점: 370
+  > 평균: 92.5
+  > 최고점수: 100
+  > 최저점수: 80
+
+
+
+* 예제 3:
+  배열에 담긴 문자를 읽어, 키로 저장 하며 값으로 1을 저장. 중복된 글자가 있을 경우 값을 1 증가 시키는 예제.
+
+  ```java
+  import java.util.*;
+  
+  public class Ex11_18 {
+      public static void main(String[] args) {
+          String[] data = {"A","K","A","K","D","K","A","K","K","K","Z","D"};
+  
+          HashMap map = new HashMap();
+  
+          for(int i = 0; i<data.length; i++){
+              if(map.containsKey(data[i])) {
+                  Integer value = (Integer)map.get(data[i]);
+                  map.put(data[i],new Integer(value.intValue() + 1));
+              } else {
+                  map.put(data[i],new Integer(1));
+              }
+          }
+  
+          Iterator it = map.entrySet().iterator();
+  
+          while (it.hasNext()){
+              Map.Entry entry = (Map.Entry)it.next();
+              int value = ((Integer)entry.getValue()).intValue();
+              System.out.println(entry.getKey()+":"+ printBar('#', value) + " " + value);
+          }
+      }
+  
+      public static String printBar (char ch , int value){
+          char[] bar = new char[value];
+  
+          for(int i = 0; i < bar.length; i++){
+              bar[i]= ch;
+          }
+  
+          return new String(bar); //String(char[] chArr)
+      }
+  }
+  
+  ```
+
+  > 이 코드의 결과:
+  > A:### 3
+  > D:## 2
+  > Z:# 1
+  > K:###### 6
+
+  * 한정된 범위 내의 순차적인 값들의 빈도수는 배열을 이용하지만, 
+    이처럼 한정되지 않은 값들의 빈도수는 HashMap으로 구할 수 있다.
