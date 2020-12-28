@@ -1981,3 +1981,191 @@ public class Ex11_6 {
 
   * 한정된 범위 내의 순차적인 값들의 빈도수는 배열을 이용하지만, 
     이처럼 한정되지 않은 값들의 빈도수는 HashMap으로 구할 수 있다.
+
+
+
+## 18. Collections의 메서드
+
+* Collectrions도 Arrays처럼 컬렉션에 관련된 메서드를 제공한다.
+  * fill(), copy(), sort(), binarySearch() 등의 메서드는 두 클래스에 모두 포함되어 있으며, 같은 기능을 한다.
+
+
+
+### 1. 컬렉션의 동기화
+
+* 멀티 쓰레드(multi - thread) 프로그래밍에서는 하나의 객체를 여러 쓰레드에서 접근 할 수 있기 때문에, 동기화(synchronuzation)가 필요하다.
+  데이터의 무결성(intergrity)을 유지하기 위해서 필요한 작업이다.
+
+* 이전에는 자동 동기화가 되도록 처리되었으나, 멀티쓰레드 프로그래밍이 아닌 이상 성능을 떨어트리는 요인이 되기 때문에, 
+  ArrayList와 HashMap과 같은 컬렉션은 동기화가 수동으로 처리 가능하도록 변경되었다.
+
+  * java.util.Collections클래스의 동기화 메서드를 이용하면 된다.
+
+  * 아래와 같은 동기화 메서드를 제공한다.
+
+    ```java
+    static Collection synchronizedCollection(Collection c)
+    static List 			synchronizedList(List list)
+    static Set 				synchronizedSet(Set s)
+    static Map			  synchronizedMap(Map m)
+    static SortedSet  synchronizedSortedSet(SortedSet s)
+    static SortedMap  synchronizedSortedMap(SortedMap m)
+    ```
+
+    사용법:
+
+    ```java
+    List syncList = Collections.synchronizedList(new ArrayList(...));
+    ```
+
+    
+
+### 2. 변경 불가 컬렉션 만들기
+
+* 컬렉션에 저장된 데이터를 보호하기 위해, 읽기 전용으로 만들어야 할 때 사용.
+
+* 주로, 멀티 스레드 프로그래밍에서 데이터 손상을 방지하기 위해 사용된다.
+
+  * 아래와 같은 메서드를 이용하면 된다.
+
+    ```java
+    static Collection 	 unmodifiableCollection(Collection c)
+    static List 				 unmodifiableList(List list)
+    static Set 			 	 	 unmodifiableSet(Set s)
+    static Map			 		 unmodifiableMap(Map m)
+    static NavigableSet  unmodifiableNavigableSet(NavigableSet s)
+    static SortedSet  	 unmodifiableSortedSet(SortedSet s)
+    static NavigableMap  unmodifiableNavigableMap(NavigableMap m)
+    static SortedMap  	 unmodifiableSortedMap(SortedMap m)
+    ```
+
+    
+
+### 3. 싱글톤 컬렉션 만들기
+
+* 단 하나의 객체만 저장하는 컬렉션.
+
+  * 아래와 같은 메서드를 이용하면 된다.
+
+    ```java
+    static List 				 singletonList(Object o)
+    static Set 			 	 	 singleton(Object o)		 // singletonSet이 아님에 주의.
+    static Map			 		 singletonMap(Object o)
+    ```
+
+  * 매개변수로 저장할 요소를 지정하면, 해당 요소를 저장하는 컬렉션을 반환함.
+    반환된 컬렉션은 변경할 수 없음.
+
+
+
+### 4. 단일 컬렉션 만들기
+
+* 한 종류의 객체만 저장하는 컬렉션 만들기.
+
+* 컬렉션에 지정된 종류의 객체만 저장할 수 있도록 제한할 수 있는 컬렉션.
+
+  * 아래와 같은 메서드를 이용하면된다.
+
+    ```java
+    static Collection 	 checkedCollection(Collection c, Class type)
+    static List 				 checkedList(List list, Class type)
+    static Set 			 	 	 checkedSet(Set s, Class type)
+    static Map			 		 checkedMap(Map m, Class KeyType, Class valueType)
+    static Queue				 checkedQueue(Queue queue, Class type)
+    static NavigableSet  checkedNavigableSet(NavigableSet s, Class type)
+    static SortedSet  	 unmodifiableSortedSet(SortedSet s, Class type)
+    static NavigableMap  unmodifiableNavigableMap(NavigableMap m, Class KeyType, Class valueType)
+    static SortedMap  	 unmodifiableSortedMap(SortedMap m, Class KeyType, Class valueType)
+    ```
+
+    사용법:
+    두번째 매개변수에 저장할 객체의 클래스를 지정.
+
+    ```java
+    List list = new ArrayList();
+    List checkedList = checkedList(list, String.class); // String만 저장 가능
+    checkedList.add("abc"); 				 // 저장 가능
+    checkedList.add(new Integer(3)); // 에러. ClassCastException발생
+    ```
+
+    
+
+* 예제:
+
+  ```java
+  import java.util.*;
+  import static java.util.Collections.*;
+  
+  public class Ex11_19 {
+      public static void main(String[] args) {
+          List list = new ArrayList();
+          System.out.println(list);
+  
+          addAll(list, 1,2,3,4,5);
+          System.out.println(list);
+  
+          rotate(list, 2); // 오른쪽으로 두 칸씩 이동
+          System.out.println(list);
+  
+          swap(list, 0, 2); // 첫 번째와 세 번째를 교환 (swap)
+          System.out.println(list);
+  
+          shuffle(list);  // 저장된 요소의 위치를 임의로 변경
+          System.out.println(list);
+  
+          sort(list);  // 정렬
+          System.out.println(list);
+  
+          sort(list, reverseOrder()); // 역순 정렬. reverse(list); 와 동일
+          System.out.println(list);
+  
+          int idx = binarySearch(list, 3); // 3이 저장된 위치(Index)를 반환
+          System.out.println("index of 3 =" + idx);
+  
+          System.out.println("max = "+max(list));
+          System.out.println("min = "+min(list));
+          System.out.println("min = "+max(list,reverseOrder()));
+  
+          fill(list,9); // list를 9로 채운다.
+          System.out.println("list ="+list);
+  
+          // list와 같은 크기의 새로운 List를 생성하고 2로 채운다. 단, 결과는 변경 불가.
+          List newList = nCopies(list.size(), 2);
+          System.out.println("newList = "+newList);
+  
+          System.out.println(disjoint(list, newList)); // 공통 요소가 없으면 true
+  
+          copy(list, newList);
+          System.out.println("newList ="+newList);
+          System.out.println("List ="+list);
+  
+          replaceAll(list, 2, 1);
+          System.out.println("List ="+list);
+  
+          Enumeration e = enumeration(list);
+          ArrayList list2 = list(e);
+  
+          System.out.println("list2 = "+list2);
+      }
+  }
+  ```
+
+  > 위 코드의 결과:
+  > []
+  > [1, 2, 3, 4, 5]
+  > [4, 5, 1, 2, 3]
+  > [1, 5, 4, 2, 3]
+  > [4, 3, 2, 5, 1]
+  > [1, 2, 3, 4, 5]
+  > [5, 4, 3, 2, 1]
+  > index of 3 =2
+  > max = 5
+  > min = 1
+  > min = 1
+  > list =[9, 9, 9, 9, 9]
+  > newList = [2, 2, 2, 2, 2]
+  > true
+  > newList =[2, 2, 2, 2, 2]
+  > List =[2, 2, 2, 2, 2]
+  > List =[1, 1, 1, 1, 1]
+  > list2 = [1, 1, 1, 1, 1]
