@@ -2169,3 +2169,23 @@ public class Ex11_6 {
   > List =[2, 2, 2, 2, 2]
   > List =[1, 1, 1, 1, 1]
   > list2 = [1, 1, 1, 1, 1]
+
+
+
+## 19. 컬렉션 클래스 정리 & 요약
+
+![스크린샷 2020-12-28 오후 7 40 01](https://user-images.githubusercontent.com/69128652/103208658-9452f300-4944-11eb-9d41-10d603b12a7e.png)
+
+| 컬렉션                           | 특징                                                         |
+| -------------------------------- | :----------------------------------------------------------- |
+| ArrayList                        | 배열기반, 데이터의 추가와 삭제에 불리. 순차적인 추가삭제는 제일 빠름.<br />임의의 요소에 대한 접근성(accessibility)이 뛰어남. |
+| LinkedList                       | 연결기반. 데이터의 추가와 삭제에 유리. 임의의 요소에 대한 접근성이 좋지 않음. |
+| HashMap                          | 배열과 연결이 결합된 형태. 추가, 삭제, 검색, 접근성이 모두 뛰어남. 검색에는 최고성능. |
+| TreeMap                          | 연결기반. 정렬과 검색(특히 범위검색)에 적합. 검색성능은 HashMap보다 떨어짐. |
+| Stack                            | Vector를 상속받아 구현됨.                                    |
+| Queue                            | LinkedList가 Queue인터페이스를 구현함.                       |
+| Properties                       | Hashtable을 상속받아 구현.                                   |
+| HashSet                          | HashMap을 이용해서 구현                                      |
+| TreeSet                          | TreeMap을 이용해서 구현.                                     |
+| LinkedHashMap<br />LinkedHashSet | HashMap과 HashSet에 저장순서유지기능을 추가                  |
+
