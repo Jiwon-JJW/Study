@@ -1545,5 +1545,79 @@ public class Ex11_6 {
     }
     ```
 
-    > 데이터를 저장하기 위한 Object 타입의 참조변수 하나와 두 개의 노드를 참조하기 위한 두 개의 참조변수를 선언했다.
+    > 데이터를 저장하기 위한 Object 타입의 참조변수 하나와 두 개의 노드를 참조하기 위한 두 개의 참조변수를 선언한 것.
+
+
+
+### * 이진 탐색 트리 (binary search tree)
+
+* 이진 탐색 트리 란?
+  * 부모 노드의 왼쪽에는, 부모노드의 값보다 작은 값의 자식 노드.
+    부모 노드의 오른쪽에는, 부모노드의 값보다 큰 값의 자식노드를 저장하는 이진트리.
+  * 예시 그림
+    ![스크린샷 2020-12-28 오후 1 44 45](https://user-images.githubusercontent.com/69128652/103190096-d95e3180-4912-11eb-86fe-3729448378b5.png)
+    * TreeSet은 이처럼 정렬된 상태를 유지하여 단일 값 검색 및 범위검색(range search)이 매우 빠름.
+  * 검색 효율이 뛰어난 자료구조.
+
+
+
+* 이진 탐색 트리의 특징:
+  * 모든 노드에 최대 2개의 자식노드를 가질 수 있음.
+  * 왼쪽 자식노드는 부모노드보다 작은 값을 가지고, 오른쪽 자식노드는 부모노드보다 큰 값을 갖는다.
+  * 노드의 추가 및 삭제에 시간이 많이 소요된다. 이는 트리 자체가 데이터를 순차적으로 저장하지 않고, 저장하는 위치를 찾아 저장하기 때문이다.
+  * 검색(범위 검색)과 정렬에 유리.
+  * 중복된 값을 저장하지 못함.
+
+
+
+* 이진 탐색 트리의 저장과정
+
+  1. 처음으로 저장된 값이 루트가 된다.
+     ![스크린샷 2020-12-28 오후 1 54 10](https://user-images.githubusercontent.com/69128652/103190414-2bec1d80-4914-11eb-9d81-eb10fe8a97c3.png)
+  2. 트리의 루트부터 시작해, 값의 크기를 비교하여 왼쪽에는 루트의 값보다 작은 값, 오른쪽에는 큰 값을 저장 한다.
+     ![스크린샷 2020-12-28 오후 1 55 21](https://user-images.githubusercontent.com/69128652/103190443-54741780-4914-11eb-86f1-d83252a7c763.png)![스크린샷 2020-12-28 오후 1 56 15](https://user-images.githubusercontent.com/69128652/103190465-74a3d680-4914-11eb-823a-576fc0a61efd.png)
+  3. 이렇게 값을 비교하며 트리를 구성하면, 왼쪽 마지막 레벨이 제일 작은 값, 그리고 오른쪽 마지막 레벨의 값이 가장 큰 값이 된다.
+     ![스크린샷 2020-12-28 오후 1 58 09](https://user-images.githubusercontent.com/69128652/103190531-b896db80-4914-11eb-84ef-20749741677e.png)
+     ![스크린샷 2020-12-28 오후 1 58 50](https://user-images.githubusercontent.com/69128652/103190551-d106f600-4914-11eb-982e-6f7e07277179.png)
+
+  * 컴퓨터가 알아서 값을 비교하지 못하기 때문에, TreeSet에 저장되는 객체가 Comparable를 구현하거나, Comparator를 제공하여 비교할 수 있도록 방법을 제공해줘야한다.
+  * 만일 방법 미제공시, 객체를 저장할 때 예외가 발생할 수 있음
+
+
+
+### * TreeSet의 메서드
+
+| 생성자 또는 메서드                                           | 설명                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| TreeSet()                                                    | 기본 생성자                                                  |
+| TreeSet(Collection c)                                        | 주어진 컬렉션을 저장하는 TreeSet을 생성                      |
+| TreeSet(Comaprator comp)                                     | 주어진 정렬조건으로 정렬하는 TreeSet을 생성                  |
+| TreeSet(SortedSet s)                                         | 주어진 컬렉션(SortedSet 구현) s 를 저장하는 TreeSet 생성     |
+| boolean add(Object o)<br />boolean add(Collection c)         | 지정된 객체(o) 또는 Collection(c)의 객체들을 Collection에 추가 |
+| Object ceiling(Object o)                                     | 지정된 객체와 같은 객체를 반환. <br />없으면 큰 값을 가진 객체 중, 가장 가까운 값의 객체를 반환.없으면 null |
+| void clear()                                                 | 저장된 모든 객체를 삭제                                      |
+| Object clone()                                               | TreeSet을 복제하여 반환                                      |
+| Comparator comparator()                                      | TreeSet의 정렬기준(Comparator)을 반환                        |
+| boolean contains(Object o)<br />boolean containsAll(Collection c) | 지정된 객체(o)또는 Collection의 객체들이 모두 포함되어있는지 확인 |
+| NavigableSet descendingSet()                                 | TreeSet에 저장된 요소들을 역순으로 정렬해서 반환             |
+| Object first()                                               | 정렬된 순서에서 첫 번째 객체를 반환.                         |
+| Object floor(Object o)                                       | 지정된 객체와 같은 객체를 반환. <br />없으면 작은 값을 가진 객체 중, 제일 가까운 값의 객체를 반환.없으면 null |
+| SortedSet headSet(Object toElement)                          | 지정된 객체보다 작은 값의 객체들을 반환                      |
+| NavigableSet headSet(Object toElement , boolean inclusive)   | 지정된 객체보다 작은 값의 객체들을 반환.<br />inclusive가 true이면, 같은 값의 객체도 포함. |
+| Object higher(Object o)                                      | 지정된 객체보다 큰 값을 가진 객체 중 제일 가까운 값의 객체를 반환.<br />없으면 null |
+| boolean isEmpty()                                            | TreeSet이 비어있는지 확인                                    |
+| Iterator iterator()                                          | TreeSet의 Iterator를 반환                                    |
+| Object last()                                                | 정렬된 순서에서 마지막 객체를 반환                           |
+| Object lower(Object o)                                       | 지정된 객체보다 작은 값을 가진 객체 중 제일 가까운 값의 객체를 반환.<br />없으면 null |
+| Object pollFirst()                                           | TreeSet의 첫번째 요소(제일 작은 값의 객체)를 반환            |
+| Object pollLast()                                            | TreeSet의 마지막 요소(제일 큰 값의 객체)를 반환.             |
+| boolean remove(Object o)                                     | 지정된 객체를 삭제                                           |
+| boolean retainAll(Collection c)                              | 주어진 컬렉션과 공통된 요소만을 남기고 삭제(교집합)          |
+| int size()                                                   | 저장된 객체의 개수를 반환                                    |
+| Spliterator spliterator()                                    | TreeSet의 spliterator를 반환                                 |
+| SortedSet subSet(Object fromElement, Object toElment)        | 범위 검색(fromElement와 toElement사이)의 결과를 반환한다.<br />(끝 범위인 toElement는 범위에 포함되지 않음) |
+| NavigableSet subSet(Object fromElement, <br />boolean fromInclusive, Object toElement, <br />boolean toInclusive) | 범위 검색(fromElement와 toElement사이)의 결과를 반환한다.<br />(fromInclusive가 true면 시작값이, toInclusive가 true면 <br />끝 값이 포함된다.) |
+| SortedSet tailSet(Object fromElement)                        | 지정된 객체보다 큰 값의 객체들을 반환한다.                   |
+| Object[] toArray()                                           | 저장된 객체를 객체배열로 반환한다.                           |
+| Object[] toArray(Object[] a)                                 | 저장된 객체를 주어진 객체배열에 저장하여 반환한다.           |
 
