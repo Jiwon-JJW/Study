@@ -411,6 +411,62 @@ public class Tx11_5 {
 ### 11-6 다음 예제의 빙고판은 1~30사이의 숫자들로 만든 것인데, 숫자들의 위치가 잘 섞이지 않는다는 문제가 있다. 이러한 문제가 발생하는 이유와 이 문제를 개선하기 위한 방법을 설명하고, 이를 개선한 새로운 코드를 작성하시오.
 
 ```java
+import java.util.*;
 
+public class Tx11_6 {
+    public static void main(String[] args) {
+        Set set = new HashSet();
+        int[][] board = new int[5][5];
+
+        for(int i = 0; set.size() < 25; i++){
+            set.add((int)(Math.random() * 30)+1 +"");
+        }
+
+        Iterator it = set.iterator();
+
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board[i].length; j++){
+                board[i][j] = Integer.parseInt((String)it.next());
+                System.out.print((board[i][j] < 10 ? "  ":" ") + board[i][j]);
+            }
+            System.out.println();
+        }
+    }
+}
 ```
 
+* 답:
+  해싱알고리즘 특성 상 지정된 자리에 같은 값이 같은 자리에만 저장되기 때문에 섞이지 않는 문제가 발생한 것이다.
+
+  이 때문에 ArrayList에 데이터를 옮겨받아, Collections의 shuffle()기능을 이용해 섞어 준 것.
+
+  ```java
+  import java.util.*;
+  import java.util.stream.Collectors;
+  
+  public class Tx11_6 {
+      public static void main(String[] args) {
+          Set set = new HashSet();
+          int[][] board = new int[5][5];
+  
+          for(int i = 0; set.size() < 25; i++){
+              set.add((int)(Math.random() * 30)+1 +"");
+          }
+  
+          List list = new ArrayList(set);
+          Collections.shuffle(list);
+  
+          Iterator it = list.iterator();
+  
+          for(int i = 0; i < board.length; i++){
+              for(int j = 0; j < board[i].length; j++){
+                  board[i][j] = Integer.parseInt((String)it.next());
+                  System.out.print((board[i][j] < 10 ? "  ":" ") + board[i][j]);
+              }
+              System.out.println();
+          }
+      }
+  }
+  ```
+
+  
