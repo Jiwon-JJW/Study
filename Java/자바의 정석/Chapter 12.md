@@ -1049,5 +1049,537 @@
 
   
 
+## 03. 애너테이션
 
+### 애너테이션이란?
+
+* 프로그램의 소스코드안에 다른 프로그램을 위한 정보를 **약속된 형식으로 포함**시킨 것.
+* 주석(comment)처럼 프로그래밍 언어에 영향을 미치지 않으며, 다른 프로그램에 유용한 정보를 제공하는 장점이 있음.
+* 애너테이션의 조상인 Annotation인터페이스의 소스코드 중, '/**'로 시작하는 주석 안의 소스코드에 대한 설명을 적고, '@'이 붙은 태그들을 볼 수 있는다.
+  이는 정의된 태그를 이용해 주석 내의 정보를 저장하고, 이 정보를 javadoc.exe라는 프로그램이 문서를 작성하는 것에 사용되는 것이다.
+  그리고 이 기능을 응용하여 만들어 진 것이 애너테이션. 
+
+
+
+* 표준 애너테이션과 메타애너테이션이 존재한다.
+
+
+
+### 표준 애너테이션
+
+* 주로 컴파일러를 위한 것. 컴파일러에게 유용한 정보를 제공한다.
+
+  | 애너테이션           | 설명                                                   |
+  | -------------------- | ------------------------------------------------------ |
+  | @Override            | 컴파일러에게 메서드를 오버라이딩 하는 것이라고 알린다. |
+  | @Deprecated          | 앞으로 사용하지 않을 것을 권장하는 대상에 붙인다.      |
+  | @SupperessWarnings   | 컴파일러의 특정 경고메세지가 나타나지 않게 해준다.     |
+  | @SafeVarargs         | 지네릭스 타입의 가변인자에 사용한다.(JDK1.7)           |
+  | @FunctionalInterface | 함수형 인터페이스라는 것을 알린다.(JDK1.8)             |
+  | @Native              | native메서드에서 참조되는 상수 앞에 붙인다.(JDK1.8)    |
+
+
+
+#### @Override
+
+* 메서드 앞에만 붙일 수 있는 애너테이션.
+
+* 조상의 메서드를 오버라이딩하는 것이라는 것을 컴파일러에게 알려주는 역할.
+
+  * 만일 조상의 메서드를 오버라이딩 할 때, 이름을 잘못 적는 실수를 해도 이 애너테이션을 이용하면, 에러 코드가 나타나서 쉽게 알 수 있다.
+
+* 예제:
+
+  ```java
+  public class Parent {
+      void parentMethod() {}
+  }
+  
+  class Child extends Parent {
+      @Override
+      void parentmethod(){} //조상의 이름 잘못적음(M을 m으로)
+  }
+  ```
+
+  > 위 코드의 결과:
+  > java: method does not override or implement a method from a supertype
+
+  * 이름이 정상적일 땐 해당 오류가 나타나지 않는다.
+
+
+
+#### @Deprecated
+
+* 새로운 기능이 추가되어, 더 이상 사용되지 않는 필드나 메서드에 붙이는 애너테이션.
+  다른 것으로 대체되었으니, 더 이상 사용하지 않을 것을 권하는 의미다.
+
+* 만일 '@Deprecated'가 붙은 대상을 사용하는 코드를 작성할 경우:
+
+  ```
+  Note: AnnotationEx2.java uses or overrides a deprecated API.
+  Note: Recompile with -Xlint:deprecation for details.
+  ```
+
+  와 같은 메세지가 나타나며,
+  해당 소스파일(AnnotationEx2.java)이 'deprecated'된 대상을 사용하고 있으며, '-Xlint:deprecation' 옵션을 붙여, 재 컴파일 할 경우 자세한 내용을 알 수 있다는 의미이다.
+
+
+
+
+
+#### @FunctionalInterface
+
+* '함수형 인터페이스(functional interface)'를 선언 할 때, 올바르게 선언 했는지 확인하고, 잘못된 경우 에러를 발생시키는 애너테이션.
+
+* 실수를 방지할 수 있으므로 붙이는 것이 좋다.
+
+  > 함수형 인터페이스는 추상 메서드가 하나뿐이어야 한다는 제약이 있다.
+
+  ```java
+  @FunctionalInterface
+  public interface Runnable{
+    public abstruct void run(); // 추상 메서드
+  }
+  ```
+
+
+
+#### @SupperessWarnings
+
+* 컴파일러가 보여주는 경고 메세지가 나타나지 않도록 해주는 애너테이션.
+* 다른 경고메세지들을 놓칠 가능성이 있을 때 사용하며, 묵인해야하는 경고가 발생하는 대상에 해당 애너테이션을 사용하면된다.
+
+
+
+* 주로 사용되는 경고 메세지의 종류:2
+
+  * deprecation:
+    @Deprecated 가 붙은 대상을 사용해서 발생하는 경고를 차단한다.
+  * unchecked: 
+    지네릭스로 타입을 지정하지 않았을 때 발생하는 경고를 차단한다.
+  * rawtypes:
+    지네릭스를 사용하지 않아서 발생하는 경고를 차단한다.
+  * varargs:
+    가변인자의 타입이 지네릭타입일 때 발생하는 경고를 차단한다.
+
+* 억제하려는 경고메시지를 애너테이션 뒤에 괄호() 안 문자열로 지정하면 된다.
+
+  ```java
+  @SupperessWarnings("unchecked") //지네릭스와 관련된 경고를 억제.
+  ArrayList lisr = new ArrayList(); // 지네릭 타입 지정하지않음.
+  list.add(obj);				// 여기서 오류가 발생하지만 차단됨.
+    
+  // 둘 이상의 경고를 동시에 억제하고 싶을 경우: 대괄호가 필수다.
+  @SupperessWarnings({"unchecked","deprecation"}) 
+  ```
+
+  
+
+### 메타 애너테이션
+
+* 새로운 애너테이션을 정의할 때 애너테이션의 적용대상(target)이나, 유지기간(retention)을 지정하는 데 사용한다.
+* 에너테이션을 위한 애너테이션.
+
+| 애너테이션  | 설명                                                       |
+| ----------- | ---------------------------------------------------------- |
+| @Target     | 애너테이션이 적용 가능한 대상을 지정하는 데 사용한다.      |
+| @Documented | 애너테이션 정보가 javadoc으로 작성된 문서에 포함되게 한다. |
+| @Inherited  | 애너테이션이 자손 클래스에 상속되도록 한다.                |
+| @Retention  | 애너테이션이 유지되는 범위를 지정하는 데 사용한다.         |
+| @Repeatable | 애너테이션을 반복해서 적용할 수 있게 한다.(JDK 1.8)        |
+
+
+
+#### @Target
+
+* 애너테이션이 적용 가능한 대상을 지정하는 데 사용한다.
+
+* 애너테이션에 적용할 수 있는 대상을 지정한 예시:
+  이 또한 여러개를 이용하고 싶다면 대괄호를 이용해야한다.
+
+  ```java
+  @Target({Type, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE})
+  @Retention(RetentionPolicy.SOURCE)
+  public @interface SuppressWarnings {
+    String[] value();
+  }
+  ```
+
+* @Target으로 지정할 수 있는 애너테이션 적용대상:
+
+  | 대상 타입       | 의미                                                         |
+  | --------------- | ------------------------------------------------------------ |
+  | ANNOTATION_TYPE | 애너테이션                                                   |
+  | CONSTRUCTION    | 생성자                                                       |
+  | FIELD           | 필드(멤버변수, enum tkdtn)                                   |
+  | LOCAL_VARIABLE  | 지역변수                                                     |
+  | METHOD          | 메서드                                                       |
+  | PACKAGE         | 패키지                                                       |
+  | PRAMETER        | 매개변수                                                     |
+  | TYPE            | 타입(클래스, 인터페이스, enum)<br />타입 선언 시, 애너테이션을 붙일 수 있다. |
+  | TYPE_PRAMETER   | 타입 매개변수(JDK1.8)                                        |
+  | TYPE_USE        | 타입이 사용되는 모든 곳(JDK1.8)<br />해당 타입의 변수를 선언할 때 붙일 수 있다. |
+
+  * 표의 값들은 'java.lang.annotation.ElementType' 이라는 열거형에 정의 되어 있으며, 아래와 같이 static import 문 사용 시,
+    Element.TYPE과 같은 것들을 위의 표 처럼 간단히 사용할 수 있다.
+
+    ```java
+    import java.lang.annotation.ElementType.*;
+    
+    @Target({TYPE, FIELD, TYPE_USE}) // 적용 대상이 TYPE, FIELD, TYPE_USE
+    
+    public @interface MyAnnotation { } // MyAnnotation을 정의
+    
+    @MyAnnotation // 적용 대상이 TYPE인 경우.
+    class Myclass {
+      @MyAnnotation // 적용 대상이 FIELD인 경우
+      int i;
+      
+      @MyAnnotation  // 적용 대상이 TYPE_USE인 경우
+      MyClass mc;
+    }
+    ```
+
+    
+
+#### @Retention
+
+* 애너테이션이 유지(retention)되는 기간을 지정하는 데 사용한다.
+
+* 애너테이션의 유지정책(retention policy)의 종류: 
+
+  * SOURCE:
+    * 소스파일에만 존재. 클래스 파일에는 존재하지 않음.
+    * 컴파일러가 사용하는 애너테이션의 유지정책. 컴파일러를 직접 작성할 것이 아니면, 이 유지정책은 필요없음.
+    * '@Override', '@SuppresssWarnings'가 대표적 예시.
+
+  * CLASS:
+    * 클래스 파일에 존재. 실행시에 사용 불가. 기본값이다.
+    * 컴파일러가 애너테이션의 정보를 클래스 파일에 저장할 수 있게 하지만, 클래스 파일이 JVM에 로딩될때 애너테이션의 정보가 무시되기 때문에, 기본값임에도 잘 사용되지 않는다.
+  * RUNTIME:
+    * 클래스 파일에 존재. 실행시에 사용 가능.
+    * 실행 시, '리플렉션(reflection)'을 통해 클래스 파일에 저장된 애너테이션의 정보를 읽어 처리할 수 있다.
+    * '@FunctionalInterface'는 'Override'처럼 컴파일러가 체크하지만, 실행 시에도 사용되므로 'RUNTIME'으로 되어 있다.
+
+
+
+#### @Documented
+
+* 애너테이션에 대한 정보가 javadoc으로 작성한 문서에 포함되도록 한다.
+
+* 자바에서 제공하는 기본 애너테이션 중, @Override', '@SuppresssWarnings'을 제외한 나머지는 모두 이 애너테이션이 붙어있다.
+
+  ```java
+  @Documented
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE)
+  public @interface FunctionalInterface{}
+  ```
+
+
+
+#### @Inherited
+
+* 애너테이션이 자손 클래스에 상속되도록한다.
+
+* '@Inherited'가 붙은 애너테이션을 조상클래스에 붙이면, 자손 클래스도 이 애너테이션이 붙은 것과 같이 인식된다.
+
+  ```java
+  @Inherited //@SuperAnno가 자손까지 영향 미치게.
+  @interface SuperAnno {}
+  
+  @SuperAnno
+  class Parent{}
+  
+  class Chiled extends Parent { } // Child에 애너테이션이 붙은 것으로 인식
+  ```
+
+  
+
+#### @Repeatable
+
+* 보통 하나의 대상에 한 종류의 애너테이션을 붙이는데, 이 애너테이션이 붙은 애너테이션은 여러번 붙일 수 있다.
+
+  ```java
+  @Repeatable(ToDos.class) //ToDo 애너테이션을 여러번 반복해서 쓸 수 있게 한다.
+  @interface ToDo{
+    String value();
+  }
+  ```
+
+  * '@ToDo' 라는 애너테이션이 위와같이 정의 되어있을경우, 다음과 같이 '@ToDo' 를 여러 번 붙이는 것이 가능하다.
+
+    ```java
+    @ToDo("delete test codes.")
+    @ToDo("override inherited methods")
+    class MyClass{
+      ...
+    }
+    ```
+
+* 같은 이름의 애너테이션이 하나의 대상에 여러번 적용될 수 있기 때문에, 
+  이 애너테이션들을 하나로 묶어 다룰 수 있는 애너테이션도 추가로 정의해야함.
+
+  ```java
+  @interface ToDos{	// 여러 개의 ToDo애너테이션을 담을 컨테이너 애너테이션 ToDos
+    ToDo[] value(); // ToDo애너테이션 배열타입의 요소 선언. 이름이 반드시 value여야 함.
+  }
+  
+  @Repeatable(ToDos.class) // 괄호 안에 컨테이너 애너테이션을 지정해 줘야한다.
+  @interface ToDo{
+    String value();
+  }
+  ```
+
+
+
+
+
+### 애너테이션 타입 정의하기
+
+* 새로운 애너테이션을 정의하는 방법:
+  '@'를 붙이는 것을 제외하면 인터페이스 정의와 동일.
+
+  ```java
+  @interface 애너테이션이름{
+    타입 요소이름(); //애너테이션의 요소를 선언
+    ...
+  }
+  ```
+
+* 엄밀히 말하면, @Override는 애너테이션 / Override는 애너테이션의 타입 이다.
+
+
+
+### 애너테이션의 요소(element)
+
+* 애너테이션 내에 선언된 메서드를 뜻한다.
+
+* TestInfo를 이용한 예제:
+
+  ```java
+  @interface TestInfo {
+    int      count();
+    String   testedBy();
+    String[] testTools();
+    TestType testType();  // enum TestType{FIRST, FINAL}. 상수를 정의 할 수 있으나, 디폴트 메서드는 정의할 수 없음.
+    DateTime testDate();  // 자신이 아닌 다른 애너테이션(@DateTime)을 포함시킬 수 있다.
+  }
+  
+  @interface DateTime{
+    String yymmdd();
+    String hhmmss();
+  }
+  ```
+
+  * 애너테이션의 요소는,
+
+    * 반환값이 있고 매개변수는 없는 추상 메서드의 형태를 가짐
+    * 상속을 통해 구현하지 않아도 됨.
+    * 단, 애너테이션 적용 시, 요소들의 값을 빠짐없이 지정해주어야한다. (순서는 상관없음)
+
+    ```java
+    @TestInfo(
+    	count = 3, testedBy = "Kim",
+      testTools = { "JUnit","AutoTester"},
+      testType = TestType.FIRST,
+      testDate = @DateTime(yymmdd="160101", hhmmss = "235959")
+    )
+    
+    public class NewClass{...}
+    ```
+
+    
+
+    * 기본 값을 가질 수 있으며, 기본값이 있는 요소는 애너테이션을 적용 시 값을 지정하지않으면 기본값이 사용 됨.
+
+    ```java
+    @interface TestInfo {
+      int      count() default 1;
+    }
+    
+    @TestInfo // @TestInfo(count=1)과 동일.
+    public class NewClass{...}
+    ```
+
+    
+
+    * 애너테이션 요소가 오직 하나 뿐이고 이름이 value일 경우, 애너테이션 적용 시, 요소의 이름 생략 후 값만 적어도 된다.
+      이는 요소의 타입이 배열일 때도 동일하게 적용된다.
+
+      ```java
+      @interface TestInfo {
+        String value();
+      }
+      
+      @TestInfo("passed") // @TestInfo(value="passed")과 동일.
+      public class NewClass{...}
+      
+      //만일 요소의 타입이 배열 일 경우
+      @TestInfo({"passed","test"})
+      ```
+
+      
+
+    * 요소의 타입이 배열일 경우, 괄호{}를 사용해 여러개의 값을 지정할 수 있음.
+
+      ```java
+      @interface TestInfo {
+        String[] testTools();
+      }
+      
+      @TestInfo(testTools = { "JUnit","AutoTester"}) // 값이 여러개일 경우
+      @TestInfo(testTools = "JUnit") // 값이 하나일 때는 괄호 생략 가능.
+      @TestInfo(testTools = {}) // 값이 없을 땐 괄호 생략 불가능.
+      public class NewClass{...}
+      ```
+
+    
+
+    * 기본값 지정 시에도 괄호{} 사용 가능하다.
+
+      ```java
+      @interface TestInfo(
+      	String[] info() default{"aaa","bbb"} // 값이 여러개일 경우
+        String[] info2() default "ccc" //값이 하나일 경우 괄호 생략 가능
+      )
+        
+      @TestInfo // 기본 값 사용
+      @TestInfo(info2 = {}) // info2가 "ccc"가 아닌, info2 = {} 와 같아짐. info는 기본값.
+      ```
+
+
+
+
+
+### 모든 애너테이션의 조상
+
+* 모든 애너테이션의 조상 Annotation 은 일반적인 인터페이스로 정의 되어있다.
+  (따라서 extends 방식의 상속 불가능)
+
+  ```java
+  package java.lang.annotation;
+  
+  public interface Annotation { // Annotation자신은 인터페이스이다.
+    boolean equals(Object obj);
+    int hashCode();
+    String toString();
+    
+    Class<? extends Annotation> annotationType(); // 애너테이션의 타입 반환
+  }
+  ```
+
+  * 위와 같이 정의 되어있기 때문에, 모든 애너테이션 객체는 equals(), hashCode(), toString()과 같은 메서드 호출 가능.
+
+    ```java
+    Class<AnnotationTest> cls = AnnotationTest.class;
+    Annotation[] annoArr = cls.getAnnotations();
+    
+    for(Annotation a : annoArr){
+      System.out.println("toString():"+a.toString());
+      System.out.println("hashCode():"+a.hashCode());
+      System.out.println("equals():"+a.equals());
+      System.out.println("annotationType():"+a.annotationType());
+    }
+    ```
+
+
+
+### 마커 애너테이션
+
+* Serializable이나, Cloneable인터페이스처럼, **요소가 하나도 정의 되지 않은 애너테이션**을 뜻한다.
+
+  ```java
+  @Target(ElementType.METHOD)
+  @Retention(RetentionPolicy.SOURCE)
+  public @interface Override{ } //마커 에너테이션. 정의된 요소가 하나도 없다
+  
+  @Target(ElementType.METHOD)
+  @Retention(RetentionPolicy.SOURCE)
+  public @interface Test{ } //마커 에너테이션. 정의된 요소가 하나도 없다
+  ```
+
+  
+
+### 애너테이션 요소의 규칙
+
+* 요소의 타입은 기본형, String, enum, 애너테이션, Class만 허용된다.
+* () 안에 매개변수를 선언할 수 없다.
+* 예외를 선언할 수 없다.
+* 요소를 타입 매개변수로 정의할 수 없다.
+
+```java
+@interface AnnoTest{
+  int id = 100; //OK. 상수로 하고싶다면? static final int id = 100;
+  String major(int i, int j); //매개변수 선언 불가능
+  String minor() throws Exception; // 예외 선언 불가능
+  ArrayList<T> list(); // 요소의 타입에 타입매개변수 사용 불가.
+}
+```
+
+
+
+
+
+### 애너테이션 활용 예제
+
+* 애너테이션을 직접 정의하고, 요소의 값을 출력하는 방법을 보여주는 예제.
+
+```java
+import java.lang.annotation.*;
+
+@Deprecated
+@SuppressWarnings("111") // 유효하지 않은 애너테이션은 무시된다.
+@TestInfo(testedBy = "aaa", testDate = @DateTime(yymmdd = "160101", hhmmss = "235959"))
+public class Ex12_8 {
+    public static void main(String[] args) {
+        //Ex12_8의 객체를 얻음.
+        Class<Ex12_8> cls = Ex12_8.class; // Ex12_8.class는 클래스 객체를 의미하는 리터럴.
+																					// (클래스 객체는 클래스 로더에의해 생성. 침조 시, '클래스이름.class' 의 형식 사용)
+
+        TestInfo anno = (TestInfo)cls.getAnnotation(TestInfo.class);
+        System.out.println("anno.testedBy() = "+anno.testedBy());
+        System.out.println("anno.testDate().yymmdd() = "+anno.testDate().yymmdd());
+        System.out.println("anno.testDate().hhmmss() = "+anno.testDate().hhmmss());
+
+        for(String str : anno.testTools())
+            System.out.println("testTools ="+str);
+
+        System.out.println();
+
+
+        // Ex12_8에 적용된 모든 애너테이션을 가져온다.
+				// 이는 클래스객체 내에 해당 클래스의 모든 정보를 가지고 있기 때문에 가능 한 일이다.
+        Annotation[] annoArr = cls.getAnnotations();
+
+        for(Annotation a: annoArr)
+            System.out.println(a);
+    }
+}
+@Retention(RetentionPolicy.RUNTIME) // 실행 시, 사용가능하도록 지정
+@interface TestInfo {
+    int count() default 1;
+    String testedBy();
+    String[] testTools() default "JUnit"; //하나이기 때문에, 대괄호 생략 가능.
+    TestType testType() default TestType.FIRST;
+    DateTime testDate();
+}
+
+@Retention(RetentionPolicy.RUNTIME)
+@interface DateTime {
+    String yymmdd();
+    String hhmmss();
+}
+
+enum TestType {FIRST, FINAL}
+```
+
+> 이 식의 결과:
+> anno.testedBy() = aaa
+> anno.testDate().yymmdd() = 160101
+> anno.testDate().hhmmss() = 235959
+> testTools =JUnit
+>
+> @java.lang.Deprecated()
+> @TestInfo(count=1, testType=FIRST, testTools=[JUnit], testedBy=aaa, testDate=@DateTime(yymmdd=160101, hhmmss=235959))
 
