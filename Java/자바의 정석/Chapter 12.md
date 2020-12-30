@@ -748,4 +748,306 @@
            }
        ```
 
-       
+
+
+## 02. 열거형(enum)
+
+* 열거형:
+
+  * 여러 상수를 선언 해야 할 때, 편리하게 선언하는 방법.
+
+  * 예시:
+
+    ```java
+    class Card{
+      static final int CLOVER = 0;
+      static final int HEART = 1;
+      static final int DIAMOND = 2;
+      static final int SPADE = 3;
+      
+      static final int TWO = 0;
+      static final int THREE = 1;
+      static final int FOUR = 2;
+      
+      final int kind;
+      final int num;
+    }
+    ```
+
+    ⬇️ enum으로 변경. 값을 별도로 지정하지 않아도, 배열처럼 0부터 순차적으로 정수값이 할당된다.
+
+    ```java
+    class Card{//  0   ,   1  ,    2   ,   3
+      enum Kind {CLOVER, HEART, DIAMOND, SPADE} // 열거형 Kind를 정의
+      enum Value {TWO, THREE, FOUR}							// 열거형 Value를 정의
+      
+      final Kind kind;	// 타입이 int가 아닌, Kind임에 유의하기.
+      final Value value;
+    }
+    ```
+
+    * 위와 같은 예제에서, 열거형을 사용 하기 이전의 값의 경우,
+      `if(Card.CLOVER == Card.TWO)` 와 같은 조건식을 진행 할 경우, 값이 0이기에 true를 반환한다.
+      하지만 이는, 숫자와 무늬를 비교한 것이라 실제로는 false가 반환이 되어야 하는 것이 맞다.
+    * 이에 반해 열거형의 경우, 값을 비교하기 이전에 타입을 먼저 비교하기 때문에
+      값이 같더라도 타입이 다르면 컴파일 에러를 발생시킨다.
+      `if(Card.Kind.CLOVER == Card.Value.TWO)`
+
+
+
+### 열거형의 정의와 사용
+
+* 정의 방법:
+  괄호{} 안에 상수의 이름을 나열한다.
+
+  ```java
+  enum 열거형이름 {상수명1, 상수명2, ...}
+  
+  enum Direction {EAST, SOUTH, WEST, NORTH}
+  ```
+
+* 사용 방법:
+  '열거형이름.상수명'을 작성하여 사용하면 된다. static변수를 참조하는 것과 동일.
+
+  ```java
+  class Unit{
+    int x, y; 		 //유닛의 위치
+    Direction dir; //열거형을 인스턴스 변수로 선언
+    
+    void init(){
+      dir = Direction.EASR;	// 유닛의 방향을 EAST로 초기화
+    }
+  }
+  ```
+
+* 열거형 상수간의 비교:
+
+  * '=='를 사용하며, equals()를 사용하지 않아도 비교가 된다.(빠른 성능 제공)
+
+  * '<','>' 와 같은 비교연산자는 사용 할 수 없다. 
+
+  * comparTo()는 다른 곳에서 사용할 때와 같이, 두 비교 대상이 같으면 0, 왼쪽이 크면 양수, 오른쪽이 크면 음수를 반환.
+
+    ```java
+    if(dir == Direction.EAST){
+      x++;
+    } else if (dir > Direction.WEST){ // 에러. 열거형 상수에 비교연산자 사용 불가
+      ...
+    } else if (dir.compareTo(Direction.WEST) > 0){ // compareTo()는 가능
+      ...
+    }
+    ```
+
+     
+
+### 열거형의 조상 - java.lang.Enum
+
+* 모든 열거형의 조상은 java.lang.Enum 이며, 다음과 같은 메소드를 제공
+
+  | 메서드                                    | 설명                                                       |
+  | ----------------------------------------- | ---------------------------------------------------------- |
+  | Class<E> getDeclaringClass()              | 열거형의 Class객체를 반환한다.                             |
+  | String name()                             | 열거형 상수의 이름을 문자열로 반환한다.                    |
+  | int ordinal()                             | 열거형 상수가 정의된 순서를 정수로 반환한다.(0부터 시작)   |
+  | T valueOf(Class<T> enumType, String name) | 지정된 열거형에서  name과 일치하는 열거형 상수를 반환한다. |
+
+* 컴파일러가 모든 열거형에 자동적으로 추가해주는 메소드가 두 개 있다.
+
+  * `static E[] values()`
+
+    * 열거형 Direction에 정의된 모든 상수를 출력하는 데 사용됨.
+
+      ```java
+      Direction[] dArr = Direction.values();
+      
+      for(Direction d : dArr) // for(Direction d : Direction.values())
+        System.out.printf("%s = %d%n", d.name(), d.ordinal());
+      ```
+
+  * `static E valueOf(String name)`
+
+    * 열거형 상수의 이름으로 문자열 상수에 대한 참조를 얻을 수 있게 해준다.
+
+      ```java
+      Direction d = Direction.valueOf("WEST");
+      
+      System.out.println(d); // WEST
+      System.out.println(Direction.WEST == Direction.valueOf("WEST")); // true
+      ```
+
+
+
+* 예제:
+
+  ```java
+  enum Direction {EAST, SOUTH, WEST, NORTH}
+  
+  public class Ex12_5 {
+      public static void main(String[] args) {
+          Direction d1 = Direction.EAST;
+          Direction d2 = Direction.valueOf("WEST");
+          Direction d3 = Enum.valueOf(Direction.class, "EAST");
+  
+          System.out.println("d1="+d1);
+          System.out.println("d2="+d2);
+          System.out.println("d3="+d3);
+  
+          System.out.println("d1==d2 ?"+(d1==d2));
+          System.out.println("d1==d3 ?"+(d1==d3));
+          System.out.println("d1.equals(d3) ?"+ d1.equals(d3));
+  //        System.out.println("d2 > d3 ? "+ (d2 > d3)); // 에러
+          System.out.println("d1.compareTo(d3) ?" + d1.compareTo(d3));
+          System.out.println("d1.compareTo(d2) ?" + d1.compareTo(d2));
+  
+          switch (d1){
+              case EAST: // Direction.EAST라고 쓸 수 없다.
+                  System.out.println("The direction is EAST.");
+                  break;
+  
+              case SOUTH:
+                  System.out.println("The direction is SOUTH.");
+                  break;
+  
+              case WEST:
+                  System.out.println("The direction is WEST.");
+                  break;
+  
+              case NORTH:
+                  System.out.println("The direction is NORTH.");
+                  break;
+          }
+  
+          Direction[] dArr = Direction.values();
+  
+          for(Direction d : dArr) // for (Direction d : Direction.values())
+              System.out.printf("%s = %d%n", d.name(), d.ordinal());
+      }
+  }
+  ```
+
+  > 위 코드의 결과:
+  > d1=EAST
+  > d2=WEST
+  > d3=EAST
+  > d1==d2 ?false
+  > d1==d3 ?true
+  > d1.equals(d3) ?true
+  > d1.compareTo(d3) ?0
+  > d1.compareTo(d2) ?-2
+  > The direction is EAST.
+  > EAST = 0
+  > SOUTH = 1
+  > WEST = 2
+  > NORTH = 3
+
+
+
+### 열거형에 멤버 추가하기
+
+* Enum 클래스의 ordinal()이 열거형 상수가 정의된 순서를 반환하지만, 이 값은 내부적 용도로 사용하기 위함이므로, 열거형 상수의 값으로 쓰지않는 것이 좋다.
+
+* 열거형 상수의 값이 불규칙할 경우, 열거형 상수의 이름 옆에 괄호를 적은 후, 그 안에 값을 입력하면 된다.
+
+  ```java
+  enum Direction {EAST(1), SOUTH(5), WEST(-1), NORTH(10)}
+  ```
+
+* 이런식으로 값을 입력 후, 이 값을 저장할 수 있는 인스턴스 변수와 생성자를 추가해주어야한다.
+  열거형 상수를 선언 한 후, 다른 멤버들을 추가하면 된다.
+
+  ```java
+  enum Direction {
+    EAST(1), SOUTH(5), WEST(-1), NORTH(10); // 끝에 ';'를 반드시! 추가해야한다.
+  
+    private final int value;	// 정수를 저장할 필드(인스턴스 변수) 추가
+    Direction(int value){     // 생성자 추가
+      this.value = value;
+    }
+    
+    public int getValue() { // 외부에서 값을 얻을 수 있도록 만든 기능.
+      return value;
+    }
+  }
+  ```
+
+  * 인스턴스 변수는 반드시 상수여야 할 필요는 없다.
+
+  * 열거형의 생성자는 외부에서 호출할 수 없다. 묵시적으로 private이기 때문.
+
+    ```java
+    Direction d = new Direction(1); // 불가능. 외부에서 호출 불가.
+    
+    enum Direction {
+    	...
+      Direction(int value){     // == private Direction(int value)
+    	... 
+    }
+    ```
+
+* 예제:
+
+  ```java
+  import java.util.IllegalFormatCodePointException;
+  
+  enum Direction2 {
+      EAST(1,">"), SOUTH(2,"V"), WEST(3,"<"), NORTH(4,"^");
+  
+      private static final Direction2[] DIR_ARR = Direction2.values();
+      private final int value;
+      private final String symbol;
+  
+      Direction2(int value, String symbol) { // 접근제어자 private 생략 됨.
+          this.value = value;
+          this.symbol = symbol;
+      }
+  
+      public int getValue() {
+          return value;
+      }
+  
+      public String getSymbol() {
+          return symbol;
+      }
+  
+      public static Direction2 of(int dir){
+          if(dir < 1 || dir > 4)
+              throw new IllegalArgumentException("Invalid value:" + dir);
+          return DIR_ARR[dir-1];
+      }
+  
+      // 방향을 회전시키는 메서드. num의 값만큼 90도씩 시계방향으로 회전한다.
+      public Direction2 rotate(int num){
+          num = num%4;
+  
+          if(num<0) num+=4; // num이 음수일 경우, 반시계방향으로 회전
+  
+          return DIR_ARR[(value-1+num)%4];
+      }
+  
+      public String toString() {
+          return name()+getSymbol();
+      }
+  }
+  
+  public class Ex12_6 {
+      public static void main(String[] args) {
+          for(Direction2 d : Direction2.values())
+              System.out.printf("%s=%d%n", d.name(), d.getValue());
+  
+          Direction2 d1 = Direction2.EAST;
+          Direction2 d2 = Direction2.of(1);
+  
+          System.out.printf("d1 = %s ,%d%n", d1.name(), d1.getValue());
+          System.out.printf("d2 = %s ,%d%n", d2.name(), d2.getValue());
+          System.out.println(Direction2.EAST.rotate(1));
+          System.out.println(Direction2.EAST.rotate(2));
+          System.out.println(Direction2.EAST.rotate(-1));
+          System.out.println(Direction2.EAST.rotate(-2));
+      }
+  }
+  ```
+
+  
+
+
+
