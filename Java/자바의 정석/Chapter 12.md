@@ -592,32 +592,48 @@
 
 
 
-* 위의 예제에서 makeJuice()를 지네릭 메서드로 바꾼 예제:
+* 위의 예제에서 makeJuice()를 
 
   ```java
   class Juicer {
-      static <T extends Fruit> Juice makeJuice(FruitBox2<T> box){
+      static Juice makeJuice(FruitBox2<? extends Fruit2> box){
           String tmp = "";
   
           for(Fruit2 f : box.getList())
               tmp += f + " ";
           return new Juice(tmp);
       }
+  }
+```
+  
+
+  
+  지네릭 메서드로 바꾼 예제:
+  
+  ```java
+class Juicer {
+      static <T extends Fruit> Juice makeJuice(FruitBox2<T> box){
+        String tmp = "";
+  
+        for(Fruit2 f : box.getList())
+              tmp += f + " ";
+        return new Juice(tmp);
+      }
   ```
-
+  
   * 이러한 메서드 호출 시, 타입 변수에 타입을 대입해야한다.
-
+  
     ```java
     System.out.println(Juicer.<Fruit2>makeJuice(fruitBox));
     System.out.println(Juicer.<Apple2>makeJuice(appleBox));
     ```
-
+  
     그렇지만 대부분의 경우, 컴파일러가 대입된 타입을 선언부를 통해 추정할 수 있기 때문에 생략해도 된다.
-
+  
     
-
+  
   * 다만, 지네릭 메서드 호출 시, 대입된 타입을 생략할 수 없는 경우에 참조변수나 클래스의 이름을 생략할 수 없음.
-
+  
     ```java
     System.out.println(<Fruit2>makeJuice(fruitBox)); // 에러. 클래스 이름 생략 불가.
     System.out.println(this.<Fruit2>makeJuice(fruitBox)); //OK
