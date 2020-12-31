@@ -143,5 +143,60 @@ public static ArrayList<? extends Product> merge(
 }
 ```
 
+* 답:
 
+  ```java
+  public static <T extends Product> ArrayList<T> merge(ArrayList<T> list, ArrayList<T> list2) {
+          ArrayList<T> newList = new ArrayList<T>(list);
+  
+          newList.addAll(list2);
+  
+          return newList;
+      }
+  ```
+
+  
+
+#### 12-5. 다음중 메타 애너테이션이 아닌 것을 모두 고르시오.
+
+1. Documented
+2. Target
+3. Native
+4. Inherited
+
+
+
+* 답: 3.
+
+
+
+#### 12-6. 애너테이션 TestInfo가 다음과 같이 정의되어 있을 때, 이 애너테이션이 올바르게 적용되지 않은 것은?
+
+```java
+@interface TestInfo{
+  int count() default 1;
+  String[] value() default "aaa";
+}
+```
+
+1. `@TestInfo              class Exercise12_7{}`
+2. `@TestInfo(1)           class Exercise12_7{}`
+3. `@TestInfo("bbb")       class Exercise12_7{}`
+4. `@TestInfo("bbb","ccc") class Exercise12_7{}`
+
+
+
+* 답: 4.
+* 해설: 
+  `@TestInfo("bbb","ccc") class Exercise12_7{}` 에 ("bbb","ccc") 가 아닌 , ({"bbb","ccc"}) 가 되어야 한다.
+
+
+
+* 정답: 2, 4
+
+  * 해설: 
+
+    2. `@TestInfo(1)           class Exercise12_7{}` 의 경우, 요소의 이름이 value가 아닌 경우, count = 1 이라고 작성하여야 맞는 답이다.
+
+    4번은 내가 한 해설과 동일.
 
