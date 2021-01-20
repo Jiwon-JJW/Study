@@ -563,3 +563,107 @@ public static final int NORM_PRIORITY = 5 // 보통 우선순위
 | void setDaemon(boolean daemon)                               | 쓰레드 그룹을 데몬 쓰레드 그룹으로 설정/해제                 |
 | void setMaxPriority(int pri)                                 | 쓰레드 그룹의 최대 우선순위를 설정                           |
 
+
+
+
+
+## 07. 데몬 쓰레드 (daemon thread)
+
+* 다른 일반 쓰레드의 작업을 돕는 보조적인 역할을 수행하는 쓰레드.
+  때문에, 일반 쓰레드가 모두 종료될 경우, 데몬 쓰레드 또한 자동 종료된다.
+
+* 사용 예시:
+  가비지 컬렉터, 워드 프로세서의 자동저장, 화면 자동갱신 등.
+
+* 작성 방법:
+  무한 루프와 조건문을 이용해 실행 한 후,대기 상태에서 특정 조건이 만족되면 작업을 수행하고 다시 대기상태로 돌아가도록 작성해야한다.
+
+  ```java
+  public void run() {
+    while(true) {
+      try {
+        Thread.sleep(3*1000);
+      } catch(InterruptedException e){}
+      
+      // autoSave의 값이 true라면, autoSave()를 호출.
+      if(autoSave) autoSave();
+    }
+  }
+  ```
+
+   
+
+* 실행 방법:
+  일반 쓰레드와 비슷하나, 실행하기 전 `setDaemon(true)` 를 호출 해야한다.
+
+  > `boolean isDaemon()`
+  >
+  > * 쓰레드가 데몬 쓰레드인지 확인한다. 데몬 쓰레드면 true 반환.
+  >
+  > `void setDaemon(boolean on)`
+  >
+  > * 쓰레드를 데몬 쓰레드 또는 사용자 쓰레드로 변경한다.
+  >   매개변수 on의 값을 true로 변경 시, 데몬쓰레드로 변경.
+
+* 예제:
+
+  ```java
+  public class Ex13_7 implements Runnable {
+      static boolean autoSave = false;
+  
+    public static void main(String[] args) {
+      Thread t = new Thread(new Ex13_7()); // 이 부분이 없으면 동료되지 않음.
+      t.setDaemon(true);
+      t.start();
+  
+      for(int i = 1; i <= 10; i++){
+        try {
+          Thread.sleep(1000);
+        }catch (InterruptedException e){}
+        System.out.println(i);
+  
+        if(i==5) autoSave = true;
+  
+      }
+      System.out.println("프로그램을 종료합니다.");
+    }
+    public void run() {
+      while (true) {
+        try {
+          Thread.sleep(3*1000); // 3초마다
+        } catch (InterruptedException e) {}
+  
+        // autoSave의 값이 true면, autoSave()를 호출.
+        if(autoSave) autoSave();
+  
+      }
+    }
+  
+    public void autoSave() {
+      System.out.println("작업파일이 자동 저장 되었습니다.");
+    }
+  }
+  
+  
+  ```
+
+  > 결과:
+  > 1
+  > 2
+  > 3
+  > 4
+  > 5
+  > 작업파일이 자동 저장 되었습니다.
+  > 6
+  > 7
+  > 8
+  > 작업파일이 자동 저장 되었습니다.
+  > 9
+  > 10
+  > 프로그램을 종료합니다.
+
+* 3초마다 autoSave의 값을 확인하여 값이 true라면 계속 autoSave()를 호출하는 무한 반복 쓰레드를 작성함.
+  이 쓰레드가 데몬쓰레드가 아니었다면, 강제종료 하지 않는 이상 종료되지 않았다.
+
+* setDeamon메서드는 start()호출 전에 반드시 실행해야 한다.
+
