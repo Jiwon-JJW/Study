@@ -667,3 +667,274 @@ public static final int NORM_PRIORITY = 5 // 보통 우선순위
 
 * setDeamon메서드는 start()호출 전에 반드시 실행해야 한다.
 
+
+
+## 08. 쓰레드의 상태
+
+| 상태                       | 설명                                                         |
+| -------------------------- | ------------------------------------------------------------ |
+| NEW                        | 쓰레드가 생성되었지만, start()가 호출 되지 않은 상태         |
+| RUNNABLE                   | 실행 중 또는 실행 가능한 상태                                |
+| BLOCKED                    | 동기화블럭에 의해서 일시정지된 상태(lock이 풀릴 때 까지 대기 상태) |
+| WAITING,<br />TIMED_WATING | 쓰레드 작업이 종료되지는 않았지만 실행이 가능하지 않은 일시정지 상태(UNRUNNABLE).<br />TIME_WAITING 은 일시정지 시간이 정해진 경우 |
+| TERMINATED                 | 쓰레드의 작업이 종료된 상태                                  |
+
+* 쓰레드 상태 변화 과정:
+  1. 쓰레드가 생성 된 후(NEW), start() 호출 시, 실행 대기열에 저장되어 자신의 순번을 기다린다.
+     이 때, 실행 대기열은 큐(Queue)의 구조와 같아, 먼저 들어온 쓰레드가 먼저 실행됨.
+  2. 실행 순번이 돌아왔을 경우, 실행상태로 변경.
+  3. 주어진 실행시간이 완료되거나, yield()를 만날 경우 실행 대기 상태로 돌아가며, 이후 순번의 쓰레드가 실행상태가 됨.
+  4. 쓰레드 실행 도중, suspend(), sleep(), wait(), join(), I/O block(입출력 작업에서 발생되는 지연상태. 사용자 입력 대기 등을 의미.)에 의해 일시정지 상태가 될 수 있다.
+  5. 지정된 일시정지 시간(time-out)이 다되거나, notify(), resume(), interrupt() 호출 시, 일시정지 상태에서 벗어나, 실행대기열에 저장되어 다시 순번을 기다림.
+  6. 실행이 완료 되거나, stop() 호출 시, 쓰레드 소멸.
+
+
+
+### * 쓰레드 실행제어
+
+* 효율적인 멀티쓰레드 프로그램을 만들기 위해서는, 정교한 스케줄링(scheduling)을 통해 프로세스에게 주어진 자원과 시간을 여러 쓰레드가 낭비없이 사용하도록 프로그래밍 해야됨.
+
+  > 쓰레드 프로그래밍이 어려운이유는, 동기화(synchronization)과 스케줄링(scheduling)때문이다.
+
+* 쓰레드 스케줄링 메서드:
+
+  | 메서드                                                       | 설명                                                         |
+  | ------------------------------------------------------------ | ------------------------------------------------------------ |
+  | static void sleep(long millis)<br />static void sleep(long millis, int nanos) | 지정된 시간(천분의 일초 단위)동안 쓰레드를 일시정지시킴.<br />지정한 시간 후에는 자동적으로 다시 실행대기 상태가 됨. |
+  | void join()<br />void join(long millis)<br />void join(long millis, int nanos) | 지정된 시간동안 쓰레드가 실행됨.<br />지정된 시간이 지나거나 작업 종료시, join()을 호출한 쓰레드로 돌아와 실행을 계속함. |
+  | void interrupt()                                             | sleep()이나 join()에 의해 일시정지상태인 쓰레드를 깨워서 실행대기 상태로 만듬. <br />해당 쓰레드에서는 intterupted Exception이 발생함으로써 일시정지 상태 벗어남. |
+  | void stop()                                                  | 쓰레드 즉시 종료                                             |
+  | void suspend()                                               | 쓰레드를 일시정지 시킴.<br />resume() 호출 시, 다시 실행대기 상태로 돌아간다. |
+  | void resume()                                                | suspend()에 의해 일시정지 상태가 된 쓰레드를 실행대기 상태로 만듬. |
+  | static void yield()                                          | 실행 중, 주어진 실행시간을 다른 쓰레드에게 양보(yield)하고, 자신은 실행대기 상태가 됨. |
+
+
+
+### 1. sleep()
+
+* 지정된 시간동안 쓰레드가 멈춘다.
+
+* 밀리세컨드와 나노세컨드의 시간단위로 세밀한 값 지정이 가능하지만, 어느정도 오차가 발생할 수 있다.
+
+* 사용 예시:
+
+  ```java
+  try{
+    Thread.sleep(1,500000); // 쓰레드를 0.0015초 동안 멈추게 함.
+  }catch(InterruptedException e){}
+  ```
+
+* 일시정지가 된 쓰레드는, 지정된 시간이 다되거나 interrupt()호출 시, InterruptedException발생으로 실행대기 상태로 돌아간다.
+  따라서, sleep()호출 시 항상 try-catch문으로 예외처리를 시켜줘야함.
+
+
+
+* 예제:
+
+  ```java
+  public class Ex13_8 {
+      public static void main(String[] args) {
+          ThreadEx8_1 th1 = new ThreadEx8_1();
+          ThreadEx8_2 th2 = new ThreadEx8_2();
+  
+          th1.start();
+          th2.start();
+  
+          try {
+              th1.sleep(2000); 
+          }catch (InterruptedException e){
+  
+          }
+  
+          System.out.println("<<main 종료>>");
+      }
+  }
+  
+  class ThreadEx8_1 extends Thread {
+      @Override
+      public void run() {
+          for(int i = 0; i< 300; i++){
+              System.out.print("-");
+          }
+      }
+  }
+  
+  class ThreadEx8_2 extends Thread {
+      @Override
+      public void run() {
+          for(int i = 0; i< 300; i++){
+              System.out.print("|");
+          }
+      }
+  }
+  ```
+
+  > 위 코드의 결과:
+  > ----------------------------------||||||||||||||||||||||||||||----------||----------------------------------------------------|||||||||||||||||||||||||||----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|----------------------------|||||||||||||<<th1 종료>>||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||<<th2 종료>><<main 종료>>
+
+  * th1을 sleep(2000);으로 멈췄음에도 불구하고 먼저 종료된 이유는, sleep()이 main에서 실행되었기 때문에 main쓰레드 자체가 sleep()에 영향을 받기 때문이다.
+    th1에 sleep()을 적용하고 싶다면, th1 쓰레드 내에 적용해야됨.
+
+### 2. interrupt()
+
+* 진행중인 쓰레드의 작업을 도중에 취소하고 싶은 경우에 보통 사용이 된다.
+  interrupt()발생 시, 쓰레드에게 작업을 멈추라고 요청하는데, 쓰레드가 멈추는 것 일 뿐 종료되진 않는다.
+
+  > 그냥 interrupted상태(인스턴스 변수를 바꾸는 것.
+
+* interrupted() : 쓰레드에 대해, interrupt()가 호출되었는지 알려주는 메소드.
+  true / false로 알려준다.
+
+* 사용 예시:
+
+  ```java
+  Thread th = new Thread();
+  th.start();
+    ...
+  th.interrupt(); // interrupt() 호출
+  	...
+  class MyThread extends Thread {
+    public void run(){
+      while(!interrupted()){ // interrupted()가 false일동안 반복
+        ...
+      }
+    }
+  }
+  ```
+
+* isInterrupted()도 쓰레드의 interrupt()가 호출 되었는지 확인 할 수 있지만, interrupted()와 같이 false로 초기화 하지 않는다.
+
+  ```java
+  void interrupt()						 // 쓰레드의 interrupted 상태를 false에서 true로 변경
+  boolean isInterrupted()			 // 쓰레드의 interupted 상태를 반환
+  static boolean interrupted() // 현재 쓰레드의 interrupted 상태 반환 후, false로 변경
+  ```
+
+
+
+* 예제:
+
+  ```java
+  import javax.swing.*;
+  
+  public class Ex13_9 {
+      public static void main(String[] args) {
+          ThreadEx9_1 th1 = new ThreadEx9_1();
+          th1.start();
+  
+          String input = JOptionPane.showInputDialog("아무 값이나 입력하세요");
+          System.out.println("입력하신 값은 "+input+"입니다.");
+          th1.interrupt(); // interrupt()호출 시, interrupted 상태가 true로 변경.
+          System.out.println("isInterrupted():"+th1.isInterrupted());
+      }
+  }
+  
+  class ThreadEx9_1 extends Thread{
+      @Override
+      public void run() {
+          int i = 10;
+  
+          while (i!=0 && !isInterrupted()){
+              System.out.println(i--);
+              for (long x = 0; x<2500000000L; x++); // 시간 지연
+          }
+          System.out.println("카운트 종료");
+      }
+  }
+  ```
+
+  > 결과:
+  > 10
+  > 9
+  > 8
+  > 7
+  > 입력하신 값은 1입니다.
+  > isInterrupted():true
+  > 카운트 종료
+
+
+
+### 3. suspend(), resume(), stop()
+
+* suspend()는 sleep()처럼 쓰레드를 멈추게 만들지만, sleep()과는 달리 resume()을 수동으로 호출 해 줘야, 다시 실행상태로 돌아간다.
+* stop()은 호출 즉시 쓰레드가 종료됨.
+* 이 세개의 메서드는 쓰레드의 실행제어가 손쉽지만, suspend()와 stop()이 교착상태(deadlock)를 일으키기 쉽게 구성되어있으므로, 권장되는 메서드는 아니다.
+* 하위 호환성을 위해 삭제되지 않았으므로, 사용하지 않는 것이 좋다. 
+
+
+
+* 예제:
+
+  ```java
+  public class Ex13_10 {
+      public static void main(String[] args) {
+          RunImplEx10 r = new RunImplEx10();
+  
+          Thread th1 = new Thread(r, "*");
+          Thread th2 = new Thread(r, "**");
+          Thread th3 = new Thread(r, "***");
+  
+          th1.start();
+          th2.start();
+          th3.start();
+  
+          try {
+              Thread.sleep(2000);
+              th1.suspend();
+              Thread.sleep(2000);
+              th2.suspend();
+              Thread.sleep(3000);
+              th1.resume();
+              Thread.sleep(3000);
+              th1.stop();
+              th2.stop();
+              Thread.sleep(2000);
+              th3.stop();
+          }catch (InterruptedException e){
+  
+          }
+  
+      }
+  }
+  
+  class RunImplEx10 implements Runnable {
+      @Override
+      public void run() {
+          while (true){
+              System.out.println(Thread.currentThread().getName());
+              try {
+                  Thread.sleep(1000);
+              }catch (InterruptedException e){
+  
+              }
+          }
+  
+      }
+  }
+  ```
+
+  > 결과:
+  >
+  > ```
+  > *
+  > **
+  > ***
+  > *
+  > **
+  > ***
+  > *
+  > ***
+  > *
+  > ***
+  > *
+  > ***
+  > *
+  > **
+  > ***
+  > **
+  > ```
+
+
+
+### 4. join()과 yield()
+

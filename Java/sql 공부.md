@@ -404,3 +404,28 @@ select user_userid from Account union select iduser from user; ## 셀렉트 문�
 select user_userid from Account union all select iduser from user; ## 중복되지 않은 데이터 출력 
 ```
 
+
+
+
+
+## DDL(Data Definition Language) - 데이터 정의어
+
+데이터 베이스의 구조를 정의하거나 변경, 삭제 하기 위해 사용. 주로 DB관리자 또는 설계자가 사용하기 때문에, 관리자로 로그인 해야 사용할 수 있다.
+
+- create (개체 생성)
+
+  * 테이블 생성
+    creat table student (
+    칼럼명 타입 조건(not null 등),
+    칼럼명 타입 조건(not null 등),
+    칼럼명 타입 조건(not null 등),
+
+    PRIMARY KEY~~)
+
+- alter (개체 수정)
+
+- drop (개체 삭제)
+
+- truncate (개체 초기화. 삭제 + 생성 합쳐짐)
+
+- rename (개체 이름 변경)
