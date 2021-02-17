@@ -243,7 +243,90 @@
 
 ## 06. URLConnection 클래스
 
-* 
+* 어플리케이션과 URL간의 통신 연결을 나타내는 클래스의 최상위 클래스. 추상클래스이다.
+* 연결하고자 하는 자원에 접근하고 읽고 쓰기를 할 수 있으며, 이에 관련된 메서드가 제공된다.
+* URLConnection클래스를 상속받은 클래스:
+  * HttpURLConnection
+  * JarURLConnection
+
+
+
+* 예제1 :
+  해당 URL에 연결하여 그 내용을 읽어오는 예제.
+  URL이 유효하지 않을 경우, Malformed-URLException이 발생한다.
+
+  ```java
+  import java.io.BufferedReader;
+  import java.io.IOException;
+  import java.io.InputStreamReader;
+  import java.net.MalformedURLException;
+  import java.net.URL;
+  
+  public class Ex16_4 {
+      public static void main(String[] args) {
+          URL url = null;
+          BufferedReader input = null;
+          String address =  "http://www.codechobo.com/sample/hello.html";
+          String line = "";
+  
+          try {
+              url = new URL(address);
+              input = new BufferedReader(new InputStreamReader(url.openStream()));
+            //InputStreamReader(url.openStream(); 은,
+            // URLConnection conn = url.openConnection();
+            // InputStream in = conn.getInputStream(); 과 같다.
+  
+              while ((line=input.readLine())!=null) {
+                  System.out.println(line);
+              }
+              input.close();
+          } catch (MalformedURLException e) {
+              e.printStackTrace();
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+      }
+  }
+  ```
+
+* 예제2:
+  위의 예제와 유사하지만, 텍스트 데이터가 아닌, 이진데이터를 읽어 파일로 저장한다.
+  때문에 FileReader가 아닌, FileOutputStream 사용
+
+  ```java
+  import java.io.*;
+  import java.net.MalformedURLException;
+  import java.net.URL;
+  
+  public class Ex16_5 {
+      public static void main(String[] args) {
+          URL url = null;
+          InputStream in = null;
+          FileOutputStream out = null;
+          String address =  "http://www.codechobo.com/sample/hello.html";
+  
+          int ch = 0;
+  
+          try {
+              url = new URL(address);
+              in = url.openStream();
+              out = new FileOutputStream("javabasic_src.zip");
+  
+              while ((ch = in.read())!=-1) {
+                  out.write(ch);
+              }
+              in.close();
+              out.close();
+          } catch (MalformedURLException e) {
+              e.printStackTrace();
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+      }
+  }
+  ```
+
+  
 
 
 
@@ -275,10 +358,259 @@
 ### TCP소켓 프로그래밍
 
 * 클라이언트와 서버간의 일대일 통신.
+
 * 통신과정:
   1. 서버 프로그램에서 서버소켓을 이용하여 서버 컴퓨터의 특정 포트에서 클라이언트의 연결요청 처리 준비.
   2. 클라이언트 프로그램은 접속할 서버의 IP주소와 포트 정보를 가지고 소켓을 생성하여 서버에 연결 요청
   3. 서버 소켓은 클라이언트의 연결 요청을 받아, 서버에 새로운 소켓을 생성하여 클라이언트 소켓과 연결
   4. 클라이언트 소켓과 새로만들어진 서버 소켓은 서버소켓과 관계없이 일대일 통신 진행.
-  5. 
+  
+* 서버 소켓(ServerSocket)의 역학: 포트와 결합(bind)되어 포트를 통해 원격 사용자의 연결요청을 기다리다,
+  연결요청이 올 때마다 새로운 소켓을 생성해, 상대편 소켓과 통신할 수 있도록 연결.
+
+* 실제적인 데이터 통신은 서버 소켓과 관계없이 **소켓과 소켓간에 이루어짐.**
+
+  * 예시로, 서버 소켓은 전화 교환기, 소켓은 전화기에 비유할 수 있다.
+
+* 여러 개의 소켓이 하나의 포트를 공유해 사용할 수 있지만, 서버소켓은 포트를 독점한다.
+
+  * 포트: 
+
+    * 호스트(컴퓨터)가 외부와 통신을 하기 위한 통로.
+    * 하나의 호스트가 65536개의 포트를 가지고 있으며, 번호로 구별됨.
+
+    
+
+### Socket, ServerSocket
+
+* 소켓:
+
+  * 데이터를 주고받는 연결통로는 입출력 스트림.
+  * 소켓 하나 당 입력과 출력 스트림을 가지며, 상대편 소켓의 스트림과 교차 연결된다.
+    따라서, 한 소켓에서 출력 스트림으로 데이터 전송 시, 상대편 소켓의 입력 스트림으로 받게됨.
+
+* 자바의 소켓과 서버 소켓:
+
+  * 소켓(Socket):
+    프로세스간의 통신 담당. Input/Output Stream을 가짐.
+    이 두 스트림을 통해 프로세스간의 통신이 이루어진다.
+  * 서버 소켓(Server Socket):포트와 결합(bind)되어 포트를 통해 원격 사용자의 연결요청을 기다리다,
+    연결요청이 올 때마다 새로운 소켓을 생성해, 상대편 소켓과 통신할 수 있도록 연결.
+    한 포트에 하나의 ServerSocket만 연결 가능. (프로토콜이 다르면 같은 포트 공유 가능)
+
+* 예제:
+  간단하게 TCP/IP 서버를 구현한 것. 
+
+  1. 서버 소켓이 7777번 포트에서 클라이언트 프로그램 연결요청을 기다림.
+  2. 요청이 올 때 까지 진행을 멈추고 대기.
+  3. 클라이언트 프로그램이 서버 연결 요청시, 새로운 소켓 생성
+  4. 클라이언트 프로그램 소켓과 연결
+  5. 새로운 소켓은 "[Notice] Test Message1 from Server"을 원격소켓에 전송 후 종료
+  6. 실행 결과는 서버 프로그램을 실행 시킨 후, 클라이언트 프로그램을 실행시킨 뒤, 서버프로그램 종료.
+
+  ```java
+  import javax.imageio.IIOException;
+  import java.io.DataOutputStream;
+  import java.io.IOException;
+  import java.io.OutputStream;
+  import java.net.ServerSocket;
+  import java.net.Socket;
+  import java.text.SimpleDateFormat;
+  import java.util.Date;
+  
+  public class TcpIpServer {
+      public static void main(String[] args) {
+          ServerSocket serverSocket = null;
+  
+          try {
+              // 서버 소켓을 생성하여 7777번 포트와 결합(bind) 시킨다.
+              serverSocket = new ServerSocket(7777);
+              System.out.println(getTime()+"서버가 준비 되었습니다.");
+          } catch (IOException e){
+              e.printStackTrace();
+          }
+  
+          while (true){
+              try {
+                  System.out.println(getTime()+"연결 요청을 기다립니다.");
+                  // 서버 소켓은 클라이언트의 연결요청이 올때까지 실행을 멈추고 대기.
+                  // 클라이언트의 연결 요청이 오면 클라이언트 소켓과 통신할 새로운 소켓 생성.
+                  Socket socket = serverSocket.accept();
+                  System.out.println(getTime()+socket.getInetAddress()+"로 부터 연결요청이 들어왔습니다.");
+  
+                  // 소켓의 출력스트림을 얻음
+                  OutputStream out = socket.getOutputStream();
+                  DataOutputStream dos = new DataOutputStream(out);
+  
+                  // 원격소켓(remote Socket)에 데이터 전송
+                  dos.writeUTF("[Notice] Test Message1 from Server");
+                  System.out.println(getTime()+"데이터를 전송했습니다.");
+                  
+                  // 소켓과 스트림을 닫아줌.
+                  dos.close();
+                  socket.close();
+              } catch (IOException e){
+                  e.printStackTrace();
+              }
+          }
+      }
+      
+      // 현재시간 문자열 반환
+      static String getTime() {
+          SimpleDateFormat f = new SimpleDateFormat("[hh:mm:ss]");
+          return f.format(new Date());
+      }
+  }
+  ```
+
+* 예제2:
+  예제 1과 통신하기 위한 클라이언트 프로그램.
+  연결하고자 하는 서버의 IP와 포트번호를 가지고 소켓 생성 시, 자동적으로 서버에 연결요청 함.
+
+  ```java
+  import java.io.DataInputStream;
+  import java.io.IOException;
+  import java.io.InputStream;
+  import java.net.Socket;
+  import java.net.UnknownHostException;
+  
+  public class TcpIpClient {
+      public static void main(String[] args) {
+          try {
+              String serverIP = "127.0.0.1";
+  
+              System.out.println("서버에 연결중입니다. 서버IP: " + serverIP);
+              // 소켓을 생성하여 연결 요청
+              Socket socket = new Socket(serverIP,7777);
+  
+              // 소켓의 입력스트림을 얻음
+              InputStream in = socket.getInputStream();
+              DataInputStream dis = new DataInputStream(in);
+  
+              // 소켓으로부터 받은 데이터 출력
+              System.out.println("서버로부터 받은 메세지: "+dis.readUTF());
+              System.out.println("연결을 종료시킵니다.");
+  
+              // 스트림과 소켓 닫기.
+              dis.close();
+              socket.close();
+              System.out.println("연결이 종료되었습니다.");
+          } catch (UnknownHostException e) {
+              e.printStackTrace();
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+      }
+  }
+  
+  ```
+
+  
+
+### UDP 소켓 프로그래밍 -Client
+
+* TCP 소켓 프로그래밍에서는 Socket과 Server Socket를 사용하지만, UDP소켓프로그래밍에서는 UDP가 연결 지향적인 프로토콜이 아니기 때문에 
+  통신에서 사용되는 DatagramSocket과, 데이터를 담아 전송하는 DatagramPacket이 있다.
+
+*  DatagramPacket은 헤더와 데이터로 구성되어,
+  헤더에는 DatagramPacket을 수신할 호스트의 정보(호스트 주소, 포트)가 저장되어있다.
+  따라서 DatagramPacket을 전송하면 지정된 주소의 Socket에 도착하게 됨.
+
+  
+
+```java
+import javax.imageio.IIOException;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+public class UdpClient {
+    public void start() throws IOException, UnknownHostException {
+        DatagramSocket datagramSocket = new DatagramSocket();
+        InetAddress serverAddress = InetAddress.getByName("127.0.0.1");
+        
+        // 데이터가 저장될 공간으로 byte배열 생성
+        byte[] msg = new byte[100];
+        
+        DatagramPacket outputPacket = new DatagramPacket(msg,1,serverAddress,7777);
+        // DatagramPacket 전송
+        DatagramPacket inputPacket = new DatagramPacket(msg,msg.length);
+        // DatagramPacket 수신
+        
+        
+        datagramSocket.send(outputPacket);
+        datagramSocket.receive(inputPacket);
+        
+        datagramSocket.close();
+    }
+    
+    public static void main(String[] args) {
+        try {
+            new UdpClient().start();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+}
+
+```
+
+
+
+### UDP 소켓 프로그래밍 -Server
+
+* 서버로부터 서버시간을 전송받아 출력하는 클라이언트와 서버 프로그램.
+  클라이언트가 DatagramPacket을 생성해, DatagramSocket으로 서버에 전송하면,
+  서버는 전송받은 DatagramPacket의 getAddress(), getPort()를 호출해, 클라이언트의 정보를 얻어 서버시간을 DatagramPacket에 담아 전송한다.
+
+```java
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class UdpServer {
+    public void start() throws IOException {
+        // 포트 7777번을 사용하는 소켓 생성
+
+        DatagramSocket socket = new DatagramSocket(7777);
+        DatagramPacket inPacket, outPacket;
+
+        byte[] inMsg = new byte[10];
+        byte[] outMsg;
+
+        while (true){
+            // 데이터를 수신하기 위한 패킷 생성
+            inPacket = new DatagramPacket(inMsg,inMsg.length);
+            socket.receive(inPacket);
+
+            // 수신한 패킷으로부터 client의 IP주소와 Port를 얻는다
+            InetAddress address = inPacket.getAddress();
+            int port = inPacket.getPort();
+
+            // 서버의 현재 시간을 시분초 형태로 반환
+            SimpleDateFormat sdf = new SimpleDateFormat("[hh:mmLss");
+            String time = sdf.format(new Date());
+            outMsg = time.getBytes();
+
+            // 패킷을 생성해서 client에게 전송 한다.
+            outPacket = new DatagramPacket(outMsg,outMsg.length,address,port);
+            socket.send(outPacket);
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            new UdpServer().start();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+}
+
+```
 
